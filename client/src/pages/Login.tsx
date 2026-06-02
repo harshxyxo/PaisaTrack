@@ -1,147 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mail, 
-  Lock, 
-  AlertCircle, 
-  Eye, 
-  EyeOff, 
-  ShieldCheck,
-  TrendingUp,
-  Phone,
-  UserCircle
-} from 'lucide-react';
+import { Mail, Lock, AlertCircle, Eye, EyeOff, ShieldCheck, TrendingUp, Phone, UserCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { auth, googleProvider } from '../lib/firebase';
-import { 
-  signInWithEmailAndPassword, 
-  signInWithRedirect, 
-  getRedirectResult,
-  signInAnonymously, 
-  signInWithPhoneNumber, 
-  RecaptchaVerifier,
-  ConfirmationResult
-} from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, signInAnonymously, signInWithPhoneNumber, RecaptchaVerifier, ConfirmationResult } from 'firebase/auth';
 
 const Login: React.FC = () => {
   const [authMode, setAuthMode] = useState<'email' | 'phone'>('email');
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
-
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // 🔥 YAHAN HAI ASLI JADU: Redirect hone ke baad wapas aakar ye function backend ko jagayega
-  useEffect(() => {
-    const processGoogleRedirect = async () => {
-      // Check if we just came back from Google
-      const isRedirecting = sessionStorage.getItem('isGoogleLogin');
-      if (isRedirecting === 'true') {
-        setLoading(true); // Turant spinner chalu karo
-      }
-
-      try {
-        const result = await getRedirectResult(auth);
-        
-        if (result && result.user) {
-          setLoading(true);
-          const user = result.user;
-          const fallbackEmail = user.email || `${user.uid}@guest.com`;
-          const fallbackName = user.displayName || "Google User";
-
-          try {
-            // Backend se login try karo
-            const { data } = await api.post('/auth/login', {
-              email: fallbackEmail,
-              password: user.uid
-            });
-            
-            localStorage.setItem('auth_token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            window.dispatchEvent(new Event('auth-sync'));
-            
-            toast.success("Welcome back! 🚀");
-            window.location.href = '/dashboard';
-            
-          } catch (backendError: any) {
-            // Agar pehli baar aaya hai toh Register karo
-            try {
-              const { data } = await api.post('/auth/register', {
-                name: fallbackName,
-                email: fallbackEmail,
-                password: user.uid
-              });
-
-              localStorage.setItem('auth_token', data.token);
-              localStorage.setItem('user', JSON.stringify(data.user));
-              window.dispatchEvent(new Event('auth-sync'));
-              
-              toast.success("Welcome to PaisaTrack! 🎉");
-              window.location.href = '/onboarding';
-            } catch (regError: any) {
-              const errorMsg = regError.response?.data?.message || regError.message;
-              toast.error("Backend Error: " + errorMsg);
-            }
-          }
-        }
-      } catch (error: any) {
-        console.error("Google Auth Error:", error);
-        toast.error("Google authentication failed. Please try again.");
-      } finally {
-        sessionStorage.removeItem('isGoogleLogin');
-        setLoading(false);
-      }
-    };
-
-    processGoogleRedirect();
-  }, []);
-
-  const handleSuccessfulLogin = async (result: any) => {
-    const user = result.user;
+  const handleSuccessfulLogin = async (user: any) => {
     const fallbackEmail = user.email || `${user.uid}@guest.com`;
     const fallbackName = user.displayName || (authMode === 'phone' ? user.phoneNumber : "Guest User");
 
     try {
-      const { data } = await api.post('/auth/login', {
-        email: fallbackEmail,
-        password: user.uid
-      });
-      
+      const { data } = await api.post('/auth/login', { email: fallbackEmail, password: user.uid });
       localStorage.setItem('auth_token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       window.dispatchEvent(new Event('auth-sync'));
-      
       toast.success("Welcome back! 🚀");
       window.location.href = '/dashboard';
-
     } catch (backendError: any) {
       try {
-        const { data } = await api.post('/auth/register', {
-          name: fallbackName,
-          email: fallbackEmail,
-          password: user.uid
-        });
-
+        const { data } = await api.post('/auth/register', { name: fallbackName, email: fallbackEmail, password: user.uid });
         localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         window.dispatchEvent(new Event('auth-sync'));
-        
         toast.success("Welcome to PaisaTrack! 🎉");
         window.location.href = '/onboarding';
       } catch (regError) {
         toast.error("Server connection failed. Please check backend.");
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -151,7 +51,7 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
-      await handleSuccessfulLogin(result);
+      await handleSuccessfulLogin(result.user);
     } catch (err: any) {
       setError(err.message || 'Failed to login with email.');
       setLoading(false);
@@ -160,9 +60,7 @@ const Login: React.FC = () => {
 
   const setupRecaptcha = () => {
     if (!(window as any).recaptchaVerifier) {
-      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible'
-      });
+      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
     }
   };
 
@@ -180,10 +78,6 @@ const Login: React.FC = () => {
       toast.success('OTP sent successfully!');
     } catch (err: any) {
       setError(err.message || 'Failed to send OTP.');
-      if ((window as any).recaptchaVerifier) {
-        (window as any).recaptchaVerifier.clear();
-        (window as any).recaptchaVerifier = null;
-      }
     } finally {
       setLoading(false);
     }
@@ -196,17 +90,28 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const result = await confirmationResult.confirm(otp);
-      await handleSuccessfulLogin(result);
+      await handleSuccessfulLogin(result.user);
     } catch (err: any) {
       setError(err.message || 'Invalid OTP.');
       setLoading(false);
     }
   };
 
-  // 🔥 REDIRECT WITH SESSION FLAG: Ye flag batayega ki hum wapas laut rahe hain
+  // 🔥 ZERO DELAY POPUP: Direct fire, no wrappers, no async/await block
   const handleGoogleLogin = () => {
-    sessionStorage.setItem('isGoogleLogin', 'true');
-    signInWithRedirect(auth, googleProvider);
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        setLoading(true);
+        handleSuccessfulLogin(result.user);
+      })
+      .catch((error: any) => {
+        console.error("Google Auth Error:", error);
+        if (error.code === 'auth/popup-blocked') {
+          toast.error("Popup blocked! Try using regular Chrome without Ad-Blockers.", { duration: 5000 });
+        } else if (error.code !== 'auth/popup-closed-by-user') {
+          toast.error(`Login failed: ${error.message}`);
+        }
+      });
   };
 
   const handleAnonymousLogin = async (e: React.MouseEvent) => {
@@ -214,7 +119,7 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const result = await signInAnonymously(auth);
-      await handleSuccessfulLogin(result);
+      await handleSuccessfulLogin(result.user);
     } catch (err: any) {
       toast.error(err.message || 'Anonymous login failed');
       setLoading(false);
@@ -223,16 +128,6 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#080e1d] text-[#e0e5fb] flex flex-col items-center justify-center p-6 relative overflow-hidden font-['Inter']">
-      
-      {/* 🚀 FULL SCREEN LOADER FOR REDIRECTS */}
-      {loading && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#080e1d]/90 backdrop-blur-md">
-          <div className="w-16 h-16 border-4 border-[#bd9dff] border-t-transparent rounded-full animate-spin mb-6 shadow-[0_0_15px_#bd9dff]"></div>
-          <p className="text-[#bd9dff] font-black uppercase tracking-widest animate-pulse">Processing Login...</p>
-          <p className="text-[#a5aabf] text-xs mt-2 font-medium">Waking up the backend, please wait 1-2 seconds.</p>
-        </div>
-      )}
-
       <div id="recaptcha-container"></div>
       
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#bd9dff]/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -255,48 +150,19 @@ const Login: React.FC = () => {
         </header>
 
         <div className="w-full bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-8 rounded-lg shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-white/10 shadow-[0_1px_10px_rgba(255,255,255,0.1)]"></div>
-          
           <div className="flex bg-[#0c1324] p-1 rounded-md mb-6 border border-white/5">
-            <button 
-              onClick={() => { setAuthMode('email'); setError(''); setConfirmationResult(null); }}
-              className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded transition-all ${authMode === 'email' ? 'bg-[rgba(29,37,59,0.8)] text-white shadow-sm' : 'text-[#a5aabf] hover:text-white'}`}
-            >
-              Email
-            </button>
-            <button 
-              onClick={() => { setAuthMode('phone'); setError(''); }}
-              className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded transition-all ${authMode === 'phone' ? 'bg-[rgba(29,37,59,0.8)] text-white shadow-sm' : 'text-[#a5aabf] hover:text-white'}`}
-            >
-              Phone
-            </button>
+            <button onClick={() => { setAuthMode('email'); setError(''); setConfirmationResult(null); }} className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded transition-all ${authMode === 'email' ? 'bg-[rgba(29,37,59,0.8)] text-white shadow-sm' : 'text-[#a5aabf] hover:text-white'}`}>Email</button>
+            <button onClick={() => { setAuthMode('phone'); setError(''); }} className={`flex-1 py-2 text-xs font-bold uppercase tracking-widest rounded transition-all ${authMode === 'phone' ? 'bg-[rgba(29,37,59,0.8)] text-white shadow-sm' : 'text-[#a5aabf] hover:text-white'}`}>Phone</button>
           </div>
 
           <AnimatePresence mode="wait">
             {authMode === 'email' ? (
-              <motion.form 
-                key="email"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                onSubmit={handleEmailLogin} 
-                className="space-y-6"
-              >
+              <motion.form key="email" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} onSubmit={handleEmailLogin} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-[#a5aabf] px-1" htmlFor="email">Email</label>
                   <div className="relative group flex items-center">
-                    <div className="absolute left-4 flex items-center justify-center">
-                       <Mail className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} />
-                    </div>
-                    <input 
-                      className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-4 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none" 
-                      id="email" 
-                      placeholder="your.name@student.in" 
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
+                    <div className="absolute left-4 flex items-center justify-center"><Mail className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} /></div>
+                    <input className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-4 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none" id="email" placeholder="your.name@student.in" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                   </div>
                 </div>
 
@@ -305,115 +171,45 @@ const Login: React.FC = () => {
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#a5aabf]" htmlFor="password">Password</label>
                   </div>
                   <div className="relative group flex items-center">
-                    <div className="absolute left-4 flex items-center justify-center">
-                       <Lock className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} />
-                    </div>
-                    <input 
-                      className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-12 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none" 
-                      id="password" 
-                      placeholder="••••••••" 
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <button 
-                      className="absolute right-4 flex items-center justify-center text-[#a5aabf] hover:text-[#bd9dff] transition-colors" 
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
+                    <div className="absolute left-4 flex items-center justify-center"><Lock className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} /></div>
+                    <input className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-12 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none" id="password" placeholder="••••••••" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <button className="absolute right-4 flex items-center justify-center text-[#a5aabf] hover:text-[#bd9dff] transition-colors" type="button" onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
                 
-                {error && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-500/10 border border-red-500/20 p-3 rounded-md flex items-center gap-3 text-red-400 text-xs font-semibold">
-                    <AlertCircle size={16} className="flex-shrink-0" />
-                    <p>{error}</p>
-                  </motion.div>
-                )}
+                {error && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-500/10 border border-red-500/20 p-3 rounded-md flex items-center gap-3 text-red-400 text-xs font-semibold"><AlertCircle size={16} className="flex-shrink-0" /><p>{error}</p></motion.div>}
 
                 <div className="pt-2">
-                  <button 
-                    className="w-full bg-gradient-to-br from-[#8a4cfc] to-[#bd9dff] text-[#2e006c] font-black py-4 rounded-full shadow-[0_8px_24px_rgba(189,157,255,0.15)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase italic tracking-tighter text-sm disabled:opacity-50" 
-                    type="submit"
-                    disabled={loading}
-                  >
+                  <button className="w-full bg-gradient-to-br from-[#8a4cfc] to-[#bd9dff] text-[#2e006c] font-black py-4 rounded-full shadow-[0_8px_24px_rgba(189,157,255,0.15)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase italic tracking-tighter text-sm disabled:opacity-50" type="submit" disabled={loading}>
                     {loading ? <div className="w-5 h-5 border-2 border-[#2e006c] border-t-transparent rounded-full animate-spin" /> : <span>Login with Email</span>}
                   </button>
                 </div>
               </motion.form>
             ) : (
-              <motion.form 
-                key="phone"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                onSubmit={confirmationResult ? handleVerifyOtp : handleSendOtp} 
-                className="space-y-6"
-              >
+              <motion.form key="phone" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} onSubmit={confirmationResult ? handleVerifyOtp : handleSendOtp} className="space-y-6">
                 {!confirmationResult ? (
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#a5aabf] px-1" htmlFor="phone">Phone Number</label>
                     <div className="relative group flex items-center">
-                      <div className="absolute left-4 flex items-center justify-center">
-                         <Phone className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} />
-                      </div>
-                      <input 
-                        className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-4 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none" 
-                        id="phone" 
-                        placeholder="10-digit number" 
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        required
-                      />
+                      <div className="absolute left-4 flex items-center justify-center"><Phone className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} /></div>
+                      <input className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-4 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none" id="phone" placeholder="10-digit number" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase tracking-widest text-[#a5aabf] px-1" htmlFor="otp">One Time Password</label>
                     <div className="relative group flex items-center">
-                      <div className="absolute left-4 flex items-center justify-center">
-                         <Lock className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} />
-                      </div>
-                      <input 
-                        className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-4 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none text-center tracking-[0.5em]" 
-                        id="otp" 
-                        placeholder="••••••" 
-                        type="text"
-                        maxLength={6}
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        required
-                      />
+                      <div className="absolute left-4 flex items-center justify-center"><Lock className="text-[#a5aabf] group-focus-within:text-[#bd9dff] transition-colors" size={20} /></div>
+                      <input className="w-full bg-[#0c1324] border-none rounded-md py-4 pl-12 pr-4 text-[#e0e5fb] placeholder:text-[#a5aabf]/30 focus:ring-2 focus:ring-[#bd9dff]/50 transition-all text-sm font-medium outline-none text-center tracking-[0.5em]" id="otp" placeholder="••••••••" type="text" maxLength={6} value={otp} onChange={(e) => setOtp(e.target.value)} required />
                     </div>
                   </div>
                 )}
-                
-                {error && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-500/10 border border-red-500/20 p-3 rounded-md flex items-center gap-3 text-red-400 text-xs font-semibold">
-                    <AlertCircle size={16} className="flex-shrink-0" />
-                    <p>{error}</p>
-                  </motion.div>
-                )}
-
+                {error && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-500/10 border border-red-500/20 p-3 rounded-md flex items-center gap-3 text-red-400 text-xs font-semibold"><AlertCircle size={16} className="flex-shrink-0" /><p>{error}</p></motion.div>}
                 <div className="pt-2 flex gap-2">
-                  {confirmationResult && (
-                    <button 
-                      type="button"
-                      onClick={() => { setConfirmationResult(null); setOtp(''); }}
-                      className="bg-[#0c1324] text-[#a5aabf] px-4 rounded-full text-xs font-bold uppercase hover:text-white transition-colors"
-                    >
-                      Back
-                    </button>
-                  )}
-                  <button 
-                    className="flex-1 bg-gradient-to-br from-[#8a4cfc] to-[#bd9dff] text-[#2e006c] font-black py-4 rounded-full shadow-[0_8px_24px_rgba(189,157,255,0.15)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase italic tracking-tighter text-sm disabled:opacity-50" 
-                    type="submit"
-                    disabled={loading}
-                  >
+                  {confirmationResult && <button type="button" onClick={() => { setConfirmationResult(null); setOtp(''); }} className="bg-[#0c1324] text-[#a5aabf] px-4 rounded-full text-xs font-bold uppercase hover:text-white transition-colors">Back</button>}
+                  <button className="flex-1 bg-gradient-to-br from-[#8a4cfc] to-[#bd9dff] text-[#2e006c] font-black py-4 rounded-full shadow-[0_8px_24px_rgba(189,157,255,0.15)] hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 uppercase italic tracking-tighter text-sm disabled:opacity-50" type="submit" disabled={loading}>
                     {loading ? <div className="w-5 h-5 border-2 border-[#2e006c] border-t-transparent rounded-full animate-spin" /> : <span>{confirmationResult ? 'Verify OTP' : 'Send OTP'}</span>}
                   </button>
                 </div>
@@ -424,44 +220,16 @@ const Login: React.FC = () => {
           <div className="mt-8 pt-8 border-t border-[#424859]/20">
             <p className="text-center text-[10px] font-bold uppercase tracking-widest text-[#a5aabf] mb-6">Or continue with</p>
             <div className="grid grid-cols-2 gap-4">
-              <button 
-                type="button"
-                onClick={handleGoogleLogin} 
-                disabled={loading}
-                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group disabled:opacity-50 cursor-pointer"
-              >
-                {loading ? (
-                  <div className="w-4 h-4 border-2 border-[#bd9dff] border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <img alt="Google" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaUxrQq8Lw7vVm57HYtlH6K6KvyyX0JzdxCtNLiX0ax7fnlkWvLtz685x6JjRzXlT8zOORhS_QyJ0xgKAGUSShnIekUKvwd3ZqdsuJ3JfdhBS5gY8QLkvKslg9Q1H7KQ38Lx6HRfvWSET-wtD18JUuoAIpZwe9VIPM2jleTb_Ig9ZdvQ1JvJiPAM1ZiY_LpOdYg8HberYj6i96Wn7ySARiMlVMBN8isQmPZhiNQbcNURj0cEy4qS98mdUTVFwgQdPn5VYBJiDS7zQ"/>
-                    <span className="text-xs font-semibold">Google</span>
-                  </>
-                )}
+              <button type="button" onClick={handleGoogleLogin} disabled={loading} className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group disabled:opacity-50 cursor-pointer">
+                <img alt="Google" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaUxrQq8Lw7vVm57HYtlH6K6KvyyX0JzdxCtNLiX0ax7fnlkWvLtz685x6JjRzXlT8zOORhS_QyJ0xgKAGUSShnIekUKvwd3ZqdsuJ3JfdhBS5gY8QLkvKslg9Q1H7KQ38Lx6HRfvWSET-wtD18JUuoAIpZwe9VIPM2jleTb_Ig9ZdvQ1JvJiPAM1ZiY_LpOdYg8HberYj6i96Wn7ySARiMlVMBN8isQmPZhiNQbcNURj0cEy4qS98mdUTVFwgQdPn5VYBJiDS7zQ"/>
+                <span className="text-xs font-semibold">Google</span>
               </button>
-              <button 
-                type="button"
-                onClick={handleAnonymousLogin} 
-                disabled={loading}
-                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white disabled:opacity-50 cursor-pointer"
-              >
+              <button type="button" onClick={handleAnonymousLogin} disabled={loading} className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white disabled:opacity-50 cursor-pointer">
                 <UserCircle size={16} />
                 <span className="text-xs font-semibold uppercase tracking-widest">Guest</span>
               </button>
             </div>
           </div>
-        </div>
-
-        <footer className="mt-10">
-          <p className="text-sm text-[#a5aabf]">
-            Don't have an account? 
-            <Link to="/register" className="text-[#bd9dff] font-bold hover:underline underline-offset-4 ml-1 transition-all">Register</Link>
-          </p>
-        </footer>
-
-        <div className="mt-12 flex items-center gap-2 px-4 py-2 bg-[#0c1324] rounded-full">
-          <ShieldCheck size={14} className="text-[#69f6b8]" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#a5aabf]/60 leading-none">Bank-grade 256-bit encryption</span>
         </div>
       </motion.main>
     </div>
