@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Mail, 
   Lock, 
   AlertCircle, 
-  ArrowRight, 
   Eye, 
   EyeOff, 
   ShieldCheck,
@@ -19,8 +18,6 @@ import { auth, googleProvider } from '../lib/firebase';
 import { 
   signInWithEmailAndPassword, 
   signInWithPopup, 
-  signInWithRedirect,
-  getRedirectResult,
   signInAnonymously, 
   signInWithPhoneNumber, 
   RecaptchaVerifier,
@@ -41,24 +38,6 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
-  // 🔄 FALLBACK: Agar Popup fail hua aur Redirect chala, toh wapas aane par ye usko catch karega
-  useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          setLoading(true);
-          await handleSuccessfulLogin(result);
-        }
-      } catch (err: any) {
-        console.error("Redirect handling error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    handleRedirectResult();
-  }, [navigate]);
 
   const handleSuccessfulLogin = async (result: any) => {
     const user = result.user;
@@ -93,13 +72,15 @@ const Login: React.FC = () => {
         toast.success("Welcome to PaisaTrack! 🎉");
         setTimeout(() => { window.location.href = '/onboarding'; }, 500);
       } catch (regError) {
-        toast.error("Server connection failed.");
+        toast.error("Server connection failed. Please check backend.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
-     e.preventDefault();
+    e.preventDefault();
     setError('');
     setLoading(true);
     try {
@@ -156,29 +137,33 @@ const Login: React.FC = () => {
     }
   };
 
-  // 🔥 GOD MODE: Pehle Popup, fail hua toh turant Redirect!
-  const handleGoogleLogin = (e: React.MouseEvent) => {
+  // 🔥 CLEAN POPUP METHOD ONLY
+  const handleGoogleLogin = async (e: React.MouseEvent) => {
     e.preventDefault();
-    
-    // .then chaining taaki browser ko exactly "user click" feel ho
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        setLoading(true);
-        handleSuccessfulLogin(result);
-      })
-      .catch((error) => {
-        console.warn("Popup blocked or failed. Auto-switching to Redirect mode...", error);
-        // Agar popup block ho gaya, toh turant bina pooche redirect maar do
-        signInWithRedirect(auth, googleProvider);
-      });
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      setLoading(true); 
+      await handleSuccessfulLogin(result);
+    } catch (error: any) {
+      console.error("Google Auth Error:", error);
+      if (error.code === 'auth/popup-blocked') {
+        toast.error("⚠️ Pop-up blocked! Please allow pop-ups for this site and try again.", { duration: 5000 });
+      } else if (error.code !== 'auth/popup-closed-by-user') {
+        toast.error(`Login failed: ${error.message}`);
+      }
+      setLoading(false);
+    }
   };
 
-  const handleAnonymousLogin = async () => {
+  const handleAnonymousLogin = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setLoading(true);
     try {
       const result = await signInAnonymously(auth);
       await handleSuccessfulLogin(result);
     } catch (err: any) {
       toast.error(err.message || 'Anonymous login failed');
+      setLoading(false);
     }
   };
 
@@ -378,7 +363,7 @@ const Login: React.FC = () => {
               <button 
                 onClick={handleGoogleLogin} 
                 disabled={loading}
-                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group disabled:opacity-50"
+                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group disabled:opacity-50 cursor-pointer"
               >
                 {loading ? (
                   <div className="w-4 h-4 border-2 border-[#bd9dff] border-t-transparent rounded-full animate-spin" />
@@ -392,7 +377,7 @@ const Login: React.FC = () => {
               <button 
                 onClick={handleAnonymousLogin} 
                 disabled={loading}
-                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white disabled:opacity-50"
+                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white disabled:opacity-50 cursor-pointer"
               >
                 <UserCircle size={16} />
                 <span className="text-xs font-semibold uppercase tracking-widest">Guest</span>
