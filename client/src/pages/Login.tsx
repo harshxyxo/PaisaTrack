@@ -42,7 +42,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // 🔄 Google Redirect ke baad user data capture karne ke liye
+  // 🔄 Google Redirect ke baad data handle karne wala core logic
   useEffect(() => {
     const handleRedirectResult = async () => {
       try {
@@ -52,6 +52,7 @@ const Login: React.FC = () => {
           const user = result.user;
 
           try {
+            // Step 1: Render backend par login hit karo
             const { data } = await api.post('/auth/login', {
               email: user.email,
               password: user.uid 
@@ -61,31 +62,38 @@ const Login: React.FC = () => {
             localStorage.setItem('user', JSON.stringify(data.user));
             window.dispatchEvent(new Event('auth-sync'));
             
-            toast.success("Logged in via Google!");
+            toast.success("Logged in via Google! 🚀");
             setTimeout(() => { window.location.href = '/dashboard'; }, 500);
 
           } catch (backendError: any) {
+            // Step 2: Agar user database mein nahi mila, toh register karo
             if (backendError.response?.status === 401 || backendError.response?.status === 404 || backendError.response?.status === 400) {
-              const { data } = await api.post('/auth/register', {
-                name: user.displayName || 'Google User',
-                email: user.email,
-                password: user.uid
-              });
+              try {
+                const { data } = await api.post('/auth/register', {
+                  name: user.displayName || 'Google User',
+                  email: user.email,
+                  password: user.uid
+                });
 
-              localStorage.setItem('auth_token', data.token);
-              localStorage.setItem('user', JSON.stringify(data.user));
-              window.dispatchEvent(new Event('auth-sync'));
-              
-              toast.success("Welcome to PaisaTrack!");
-              setTimeout(() => { window.location.href = '/onboarding'; }, 500);
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                window.dispatchEvent(new Event('auth-sync'));
+                
+                toast.success("Welcome to PaisaTrack! 🎉");
+                setTimeout(() => { window.location.href = '/onboarding'; }, 500);
+              } catch (regError: any) {
+                console.error("Backend Registration Error:", regError);
+                toast.error(`Backend Registration Failed: ${regError.response?.data?.message || regError.message}`);
+              }
             } else {
-              throw backendError;
+              console.error("Backend Login Error:", backendError);
+              toast.error(`Backend Connection Error: ${backendError.response?.data?.message || backendError.message}`);
             }
           }
         }
       } catch (err: any) {
         console.error("Google redirect handling error:", err);
-        toast.error("Google Login verification failed.");
+        toast.error(`Google Authentication Failed: ${err.message}`);
       } finally {
         setLoading(false);
       }
@@ -94,14 +102,12 @@ const Login: React.FC = () => {
     handleRedirectResult();
   }, [navigate]);
 
-  // 🔥 YAHAN FIX KIYA HAI: Ab Guest/Email bhi custom backend se token lenge
   const handleSuccessfulLogin = async (result: any) => {
     const user = result.user;
     const fallbackEmail = user.email || `${user.uid}@guest.com`;
     const fallbackName = user.displayName || (authMode === 'phone' ? user.phoneNumber : "Guest User");
 
     try {
-      // 1. Backend se asli JWT token maango
       const { data } = await api.post('/auth/login', {
         email: fallbackEmail,
         password: user.uid
@@ -115,7 +121,6 @@ const Login: React.FC = () => {
       setTimeout(() => { window.location.href = '/dashboard'; }, 500);
 
     } catch (backendError: any) {
-      // 2. Agar user backend mein nahi hai, toh automatic register kar do
       try {
         const { data } = await api.post('/auth/register', {
           name: fallbackName,
@@ -130,7 +135,7 @@ const Login: React.FC = () => {
         toast.success("Welcome to PaisaTrack!");
         setTimeout(() => { window.location.href = '/onboarding'; }, 500);
       } catch (regError) {
-        toast.error("Server connection failed.");
+        toast.error("Server synchronization failed.");
       }
     }
   };
@@ -198,9 +203,9 @@ const Login: React.FC = () => {
   const handleGoogleLogin = async () => {
     try {
       await signInWithRedirect(auth, googleProvider);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error("Google Login failed. Please try again.");
+      toast.error(`Google Redirect Failed: ${error.message}`);
     }
   };
 
@@ -430,41 +435,6 @@ const Login: React.FC = () => {
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#a5aabf]/60 leading-none">Bank-grade 256-bit encryption</span>
         </div>
       </motion.main>
-
-      <div className="hidden lg:block absolute right-[10%] top-[30%] w-64 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-6 rounded-lg rotate-3 -z-0 opacity-40">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-[#69f6b8]/20 flex items-center justify-center text-[#69f6b8]">
-            <TrendingUp size={20} />
-          </div>
-          <div>
-            <div className="w-20 h-2 bg-[#424859] rounded-full mb-1"></div>
-            <div className="w-12 h-1.5 bg-[#424859]/50 rounded-full"></div>
-          </div>
-        </div>
-        <div className="w-full h-24 rounded-md bg-[#0c1324] mb-4 flex items-end p-2 gap-1 overflow-hidden">
-          <div className="w-1/6 h-[20%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse"></div>
-          <div className="w-1/6 h-[40%] bg-[#bd9dff]/30 rounded-t-sm animate-pulse delay-75"></div>
-          <div className="w-1/6 h-[30%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse delay-150"></div>
-          <div className="w-1/6 h-[70%] bg-[#bd9dff]/60 rounded-t-sm animate-pulse delay-200"></div>
-          <div className="w-1/6 h-[50%] bg-[#bd9dff]/40 rounded-t-sm animate-pulse delay-300"></div>
-          <div className="w-1/6 h-[90%] bg-[#bd9dff] rounded-t-sm animate-pulse delay-500"></div>
-        </div>
-      </div>
-
-      <div className="hidden lg:block absolute left-[8%] bottom-[20%] w-56 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-5 rounded-lg -rotate-6 -z-0 opacity-30 group hover:opacity-100 transition-opacity duration-700">
-        <div className="w-full h-32 rounded-lg bg-[#000000] overflow-hidden flex items-center justify-center relative">
-          <img 
-            alt="Abstract gradient" 
-            className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000" 
-            src="/assets/login-bg.png"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080e1d] to-transparent"></div>
-        </div>
-        <div className="mt-4 flex justify-between items-center">
-          <div className="w-24 h-3 bg-[#424859] rounded-full"></div>
-          <div className="w-8 h-3 bg-[#ff716a]/40 rounded-full"></div>
-        </div>
-      </div>
     </div>
   );
 };
