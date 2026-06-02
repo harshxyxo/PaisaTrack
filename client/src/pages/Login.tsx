@@ -139,20 +139,22 @@ const Login: React.FC = () => {
     }
   };
 
-  // 🔥 YAHAN CHANGE HUA HAI: Wapas Pop-up par switch kiya hai with block detection!
+  // 🔥 FINAL FIX: Pop-up bina kisi delay ke sabse pehle khulega!
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    // Yahan setLoading(true) NAHI likhna hai, warna browser block kar dega
     try {
       const result = await signInWithPopup(auth, googleProvider);
+      
+      // Pop-up khulne aur account select hone ke BAAD loading shuru karo
+      setLoading(true); 
       await handleSuccessfulLogin(result);
     } catch (error: any) {
       console.error("Google Auth Error:", error);
       if (error.code === 'auth/popup-blocked') {
-        toast.error("⚠️ Pop-up blocked! Please click the icon in your browser's URL bar (top right) to allow pop-ups for PaisaTrack, then try again.", { duration: 6000 });
+        toast.error("⚠️ Pop-up is still being blocked by your browser.", { duration: 6000 });
       } else if (error.code !== 'auth/popup-closed-by-user') {
         toast.error(`Google Login Failed: ${error.message}`);
       }
-    } finally {
       setLoading(false);
     }
   };
