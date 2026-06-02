@@ -195,7 +195,7 @@ const Dashboard: React.FC = () => {
              <div className="flex flex-col items-center justify-center gap-6 flex-1">
                 <div className="relative w-24 h-24">
                    <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
-                     {summary?.categoryBreakdown?.map((item: any, i: number) => {
+                     {Array.isArray(summary?.categoryBreakdown) && summary.categoryBreakdown.map((item: any, i: number) => {
                        const offset = summary.categoryBreakdown.slice(0, i).reduce((sum: number, prev: any) => sum + prev.percentage, 0);
                        const colors = ['#bd9dff', '#10B981', '#F43F5E', '#F59E0B', '#3B82F6'];
                        const itemColor = colors[i % colors.length];
@@ -223,7 +223,7 @@ const Dashboard: React.FC = () => {
                    </svg>
                 </div>
                 <div className="space-y-3 w-full px-6">
-                  {summary?.categoryBreakdown?.slice(0, 3).map((item: any, i: number) => {
+                  {Array.isArray(summary?.categoryBreakdown) && summary.categoryBreakdown.slice(0, 3).map((item: any, i: number) => {
                     const colors = ['#bd9dff', '#10B981', '#F43F5E', '#F59E0B', '#3B82F6'];
                     return (
                       <div key={i} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-[#a5aabf]">
@@ -253,7 +253,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            {recentTrans.length > 0 ? (
+            {Array.isArray(recentTrans) && recentTrans.length > 0 ? (
               recentTrans.map((t, i) => (
                 <div 
                   key={i} 

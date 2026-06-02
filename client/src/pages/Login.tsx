@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,7 +18,8 @@ import api from '../lib/axios';
 import { auth, googleProvider } from '../lib/firebase';
 import { 
   signInWithEmailAndPassword, 
-  signInWithPopup, 
+  signInWithRedirect, 
+  getRedirectResult,
   signInAnonymously, 
   signInWithPhoneNumber, 
   RecaptchaVerifier,
@@ -40,6 +41,61 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  // 🔄 Google Redirect ke baad user data capture karne ke liye useEffect
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          setLoading(true);
+          const user = result.user;
+
+          try {
+            // 2. Try to log in to the custom backend using Firebase UID as a secure password
+            const { data } = await api.post('/auth/login', {
+              email: user.email,
+              password: user.uid 
+            });
+            
+            // 3. Success! Backend generated a valid JWT token
+            localStorage.setItem('auth_token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            window.dispatchEvent(new Event('auth-sync'));
+            
+            toast.success("Logged in via Google!");
+            setTimeout(() => { window.location.href = '/dashboard'; }, 500);
+
+          } catch (backendError: any) {
+            // 4. If login fails (user doesn't exist in DB), Register them automatically
+            if (backendError.response?.status === 401 || backendError.response?.status === 404 || backendError.response?.status === 400) {
+              const { data } = await api.post('/auth/register', {
+                name: user.displayName || 'Google User',
+                email: user.email,
+                password: user.uid // Use UID as secure unguessable password
+              });
+
+              localStorage.setItem('auth_token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
+              window.dispatchEvent(new Event('auth-sync'));
+              
+              toast.success("Welcome to PaisaTrack!");
+              setTimeout(() => { window.location.href = '/onboarding'; }, 500);
+            } else {
+              throw backendError;
+            }
+          }
+        }
+      } catch (err: any) {
+        console.error("Google redirect handling error:", err);
+        toast.error("Google Login verification failed.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    handleRedirectResult();
+  }, [navigate]);
 
   const handleSuccessfulLogin = async (result: any) => {
     // Get the Firebase token
@@ -72,7 +128,7 @@ const Login: React.FC = () => {
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+     e.preventDefault();
     setError('');
     setLoading(true);
     try {
@@ -133,44 +189,8 @@ const Login: React.FC = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      // 1. Authenticate with Google Firebase
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-
-      try {
-        // 2. Try to log in to the custom backend using Firebase UID as a secure password
-        const { data } = await api.post('/auth/login', {
-          email: user.email,
-          password: user.uid 
-        });
-        
-        // 3. Success! Backend generated a valid JWT token
-        localStorage.setItem('auth_token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        window.dispatchEvent(new Event('auth-sync'));
-        
-        toast.success("Logged in via Google!");
-        setTimeout(() => { window.location.href = '/dashboard'; }, 500);
-
-      } catch (backendError: any) {
-        // 4. If login fails (user doesn't exist in DB), Register them automatically
-        if (backendError.response?.status === 401 || backendError.response?.status === 404 || backendError.response?.status === 400) {
-          const { data } = await api.post('/auth/register', {
-            name: user.displayName || 'Google User',
-            email: user.email,
-            password: user.uid // Use UID as secure unguessable password
-          });
-
-          localStorage.setItem('auth_token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          window.dispatchEvent(new Event('auth-sync'));
-          
-          toast.success("Welcome to PaisaTrack!");
-          setTimeout(() => { window.location.href = '/onboarding'; }, 500);
-        } else {
-          throw backendError;
-        }
-      }
+      // 1. Trigger the redirect (Does not return user instantly, handles via useEffect on reload)
+      await signInWithRedirect(auth, googleProvider);
     } catch (error) {
       console.error(error);
       toast.error("Google Login failed. Please try again.");
@@ -427,7 +447,7 @@ const Login: React.FC = () => {
         </div>
         <div className="w-full h-24 rounded-md bg-[#0c1324] mb-4 flex items-end p-2 gap-1 overflow-hidden">
           <div className="w-1/6 h-[20%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse"></div>
-          <div className="w-1/6 h-[40%] bg-[#bd9dff]/30 rounded-t-sm animate-pulse delay-75"></div>
+          <div className="w-1/6 h-[40%] bg-[#bd9dff]/30 rounded-t-sm animate-pulse delay-7 canvas-delay"></div>
           <div className="w-1/6 h-[30%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse delay-150"></div>
           <div className="w-1/6 h-[70%] bg-[#bd9dff]/60 rounded-t-sm animate-pulse delay-200"></div>
           <div className="w-1/6 h-[50%] bg-[#bd9dff]/40 rounded-t-sm animate-pulse delay-300"></div>
