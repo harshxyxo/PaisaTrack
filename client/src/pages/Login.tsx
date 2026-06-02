@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -19,11 +19,12 @@ import { auth, googleProvider } from '../lib/firebase';
 import { 
   signInWithEmailAndPassword, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   signInAnonymously, 
   signInWithPhoneNumber, 
   RecaptchaVerifier,
-  ConfirmationResult,
-  getAdditionalUserInfo
+  ConfirmationResult
 } from 'firebase/auth';
 
 const Login: React.FC = () => {
@@ -41,6 +42,24 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  // 🔄 FALLBACK: Agar Popup fail hua aur Redirect chala, toh wapas aane par ye usko catch karega
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          setLoading(true);
+          await handleSuccessfulLogin(result);
+        }
+      } catch (err: any) {
+        console.error("Redirect handling error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    handleRedirectResult();
+  }, [navigate]);
+
   const handleSuccessfulLogin = async (result: any) => {
     const user = result.user;
     const fallbackEmail = user.email || `${user.uid}@guest.com`;
@@ -56,7 +75,7 @@ const Login: React.FC = () => {
       localStorage.setItem('user', JSON.stringify(data.user));
       window.dispatchEvent(new Event('auth-sync'));
       
-      toast.success("Welcome back!");
+      toast.success("Welcome back! 🚀");
       setTimeout(() => { window.location.href = '/dashboard'; }, 500);
 
     } catch (backendError: any) {
@@ -71,10 +90,10 @@ const Login: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
         window.dispatchEvent(new Event('auth-sync'));
         
-        toast.success("Welcome to PaisaTrack!");
+        toast.success("Welcome to PaisaTrack! 🎉");
         setTimeout(() => { window.location.href = '/onboarding'; }, 500);
       } catch (regError) {
-        toast.error("Server synchronization failed.");
+        toast.error("Server connection failed.");
       }
     }
   };
@@ -88,7 +107,6 @@ const Login: React.FC = () => {
       await handleSuccessfulLogin(result);
     } catch (err: any) {
       setError(err.message || 'Failed to login with email.');
-    } finally {
       setLoading(false);
     }
   };
@@ -134,29 +152,25 @@ const Login: React.FC = () => {
       await handleSuccessfulLogin(result);
     } catch (err: any) {
       setError(err.message || 'Invalid OTP.');
-    } finally {
       setLoading(false);
     }
   };
 
-  // 🔥 FINAL FIX: Pop-up bina kisi delay ke sabse pehle khulega!
-  const handleGoogleLogin = async () => {
-    // Yahan setLoading(true) NAHI likhna hai, warna browser block kar dega
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      
-      // Pop-up khulne aur account select hone ke BAAD loading shuru karo
-      setLoading(true); 
-      await handleSuccessfulLogin(result);
-    } catch (error: any) {
-      console.error("Google Auth Error:", error);
-      if (error.code === 'auth/popup-blocked') {
-        toast.error("⚠️ Pop-up is still being blocked by your browser.", { duration: 6000 });
-      } else if (error.code !== 'auth/popup-closed-by-user') {
-        toast.error(`Google Login Failed: ${error.message}`);
-      }
-      setLoading(false);
-    }
+  // 🔥 GOD MODE: Pehle Popup, fail hua toh turant Redirect!
+  const handleGoogleLogin = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    // .then chaining taaki browser ko exactly "user click" feel ho
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        setLoading(true);
+        handleSuccessfulLogin(result);
+      })
+      .catch((error) => {
+        console.warn("Popup blocked or failed. Auto-switching to Redirect mode...", error);
+        // Agar popup block ho gaya, toh turant bina pooche redirect maar do
+        signInWithRedirect(auth, googleProvider);
+      });
   };
 
   const handleAnonymousLogin = async () => {
@@ -400,7 +414,6 @@ const Login: React.FC = () => {
         </div>
       </motion.main>
 
-      {/* Decorations */}
       <div className="hidden lg:block absolute right-[10%] top-[30%] w-64 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-6 rounded-lg rotate-3 -z-0 opacity-40">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-[#69f6b8]/20 flex items-center justify-center text-[#69f6b8]">
