@@ -73,9 +73,8 @@ const Login: React.FC = () => {
         setTimeout(() => { window.location.href = '/onboarding'; }, 500);
       } catch (regError) {
         toast.error("Server connection failed. Please check backend.");
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -137,22 +136,23 @@ const Login: React.FC = () => {
     }
   };
 
-  // 🔥 CLEAN POPUP METHOD ONLY
-  const handleGoogleLogin = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      setLoading(true); 
-      await handleSuccessfulLogin(result);
-    } catch (error: any) {
-      console.error("Google Auth Error:", error);
-      if (error.code === 'auth/popup-blocked') {
-        toast.error("⚠️ Pop-up blocked! Please allow pop-ups for this site and try again.", { duration: 5000 });
-      } else if (error.code !== 'auth/popup-closed-by-user') {
-        toast.error(`Login failed: ${error.message}`);
-      }
-      setLoading(false);
-    }
+  // 🔥 ABSOLUTE NATIVE BYPASS: No async/await gap, no preventDefault
+  const handleGoogleLogin = () => {
+    // Ye line turant execute hogi jisse browser block nahi karega
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        setLoading(true); 
+        handleSuccessfulLogin(result);
+      })
+      .catch((error: any) => {
+        console.error("Google Auth Error:", error);
+        if (error.code === 'auth/popup-blocked') {
+          toast.error("Bhai, browser sach me adiyal ho gaya hai. Please URL bar se Pop-up explicitly allow kar de.", { duration: 5000 });
+        } else if (error.code !== 'auth/popup-closed-by-user') {
+          toast.error(`Login failed: ${error.message}`);
+        }
+        setLoading(false);
+      });
   };
 
   const handleAnonymousLogin = async (e: React.MouseEvent) => {
@@ -361,6 +361,7 @@ const Login: React.FC = () => {
             <p className="text-center text-[10px] font-bold uppercase tracking-widest text-[#a5aabf] mb-6">Or continue with</p>
             <div className="grid grid-cols-2 gap-4">
               <button 
+                type="button"
                 onClick={handleGoogleLogin} 
                 disabled={loading}
                 className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group disabled:opacity-50 cursor-pointer"
@@ -375,6 +376,7 @@ const Login: React.FC = () => {
                 )}
               </button>
               <button 
+                type="button"
                 onClick={handleAnonymousLogin} 
                 disabled={loading}
                 className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white disabled:opacity-50 cursor-pointer"
