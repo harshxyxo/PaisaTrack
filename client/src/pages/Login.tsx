@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -17,7 +17,8 @@ import api from '../lib/axios';
 import { auth, googleProvider } from '../lib/firebase';
 import { 
   signInWithEmailAndPassword, 
-  signInWithPopup, 
+  signInWithRedirect, 
+  getRedirectResult,
   signInAnonymously, 
   signInWithPhoneNumber, 
   RecaptchaVerifier,
@@ -39,6 +40,71 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  // 🔥 YAHAN HAI ASLI JADU: Redirect hone ke baad wapas aakar ye function backend ko jagayega
+  useEffect(() => {
+    const processGoogleRedirect = async () => {
+      // Check if we just came back from Google
+      const isRedirecting = sessionStorage.getItem('isGoogleLogin');
+      if (isRedirecting === 'true') {
+        setLoading(true); // Turant spinner chalu karo
+      }
+
+      try {
+        const result = await getRedirectResult(auth);
+        
+        if (result && result.user) {
+          setLoading(true);
+          const user = result.user;
+          const fallbackEmail = user.email || `${user.uid}@guest.com`;
+          const fallbackName = user.displayName || "Google User";
+
+          try {
+            // Backend se login try karo
+            const { data } = await api.post('/auth/login', {
+              email: fallbackEmail,
+              password: user.uid
+            });
+            
+            localStorage.setItem('auth_token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            window.dispatchEvent(new Event('auth-sync'));
+            
+            toast.success("Welcome back! 🚀");
+            window.location.href = '/dashboard';
+            
+          } catch (backendError: any) {
+            // Agar pehli baar aaya hai toh Register karo
+            try {
+              const { data } = await api.post('/auth/register', {
+                name: fallbackName,
+                email: fallbackEmail,
+                password: user.uid
+              });
+
+              localStorage.setItem('auth_token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
+              window.dispatchEvent(new Event('auth-sync'));
+              
+              toast.success("Welcome to PaisaTrack! 🎉");
+              window.location.href = '/onboarding';
+            } catch (regError: any) {
+              const errorMsg = regError.response?.data?.message || regError.message;
+              toast.error("Backend Error: " + errorMsg);
+            }
+          }
+        }
+      } catch (error: any) {
+        console.error("Google Auth Error:", error);
+        toast.error("Google authentication failed. Please try again.");
+      } finally {
+        sessionStorage.removeItem('isGoogleLogin');
+        setLoading(false);
+      }
+    };
+
+    processGoogleRedirect();
+  }, []);
+
   const handleSuccessfulLogin = async (result: any) => {
     const user = result.user;
     const fallbackEmail = user.email || `${user.uid}@guest.com`;
@@ -55,7 +121,7 @@ const Login: React.FC = () => {
       window.dispatchEvent(new Event('auth-sync'));
       
       toast.success("Welcome back! 🚀");
-      setTimeout(() => { window.location.href = '/dashboard'; }, 500);
+      window.location.href = '/dashboard';
 
     } catch (backendError: any) {
       try {
@@ -70,11 +136,12 @@ const Login: React.FC = () => {
         window.dispatchEvent(new Event('auth-sync'));
         
         toast.success("Welcome to PaisaTrack! 🎉");
-        setTimeout(() => { window.location.href = '/onboarding'; }, 500);
+        window.location.href = '/onboarding';
       } catch (regError) {
         toast.error("Server connection failed. Please check backend.");
-        setLoading(false);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,23 +203,10 @@ const Login: React.FC = () => {
     }
   };
 
-  // 🔥 ABSOLUTE NATIVE BYPASS: No async/await gap, no preventDefault
+  // 🔥 REDIRECT WITH SESSION FLAG: Ye flag batayega ki hum wapas laut rahe hain
   const handleGoogleLogin = () => {
-    // Ye line turant execute hogi jisse browser block nahi karega
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        setLoading(true); 
-        handleSuccessfulLogin(result);
-      })
-      .catch((error: any) => {
-        console.error("Google Auth Error:", error);
-        if (error.code === 'auth/popup-blocked') {
-          toast.error("Bhai, browser sach me adiyal ho gaya hai. Please URL bar se Pop-up explicitly allow kar de.", { duration: 5000 });
-        } else if (error.code !== 'auth/popup-closed-by-user') {
-          toast.error(`Login failed: ${error.message}`);
-        }
-        setLoading(false);
-      });
+    sessionStorage.setItem('isGoogleLogin', 'true');
+    signInWithRedirect(auth, googleProvider);
   };
 
   const handleAnonymousLogin = async (e: React.MouseEvent) => {
@@ -169,6 +223,16 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#080e1d] text-[#e0e5fb] flex flex-col items-center justify-center p-6 relative overflow-hidden font-['Inter']">
+      
+      {/* 🚀 FULL SCREEN LOADER FOR REDIRECTS */}
+      {loading && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#080e1d]/90 backdrop-blur-md">
+          <div className="w-16 h-16 border-4 border-[#bd9dff] border-t-transparent rounded-full animate-spin mb-6 shadow-[0_0_15px_#bd9dff]"></div>
+          <p className="text-[#bd9dff] font-black uppercase tracking-widest animate-pulse">Processing Login...</p>
+          <p className="text-[#a5aabf] text-xs mt-2 font-medium">Waking up the backend, please wait 1-2 seconds.</p>
+        </div>
+      )}
+
       <div id="recaptcha-container"></div>
       
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#bd9dff]/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -400,41 +464,6 @@ const Login: React.FC = () => {
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#a5aabf]/60 leading-none">Bank-grade 256-bit encryption</span>
         </div>
       </motion.main>
-
-      <div className="hidden lg:block absolute right-[10%] top-[30%] w-64 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-6 rounded-lg rotate-3 -z-0 opacity-40">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-[#69f6b8]/20 flex items-center justify-center text-[#69f6b8]">
-            <TrendingUp size={20} />
-          </div>
-          <div>
-            <div className="w-20 h-2 bg-[#424859] rounded-full mb-1"></div>
-            <div className="w-12 h-1.5 bg-[#424859]/50 rounded-full"></div>
-          </div>
-        </div>
-        <div className="w-full h-24 rounded-md bg-[#0c1324] mb-4 flex items-end p-2 gap-1 overflow-hidden">
-          <div className="w-1/6 h-[20%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse"></div>
-          <div className="w-1/6 h-[40%] bg-[#bd9dff]/30 rounded-t-sm animate-pulse delay-75"></div>
-          <div className="w-1/6 h-[30%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse delay-150"></div>
-          <div className="w-1/6 h-[70%] bg-[#bd9dff]/60 rounded-t-sm animate-pulse delay-200"></div>
-          <div className="w-1/6 h-[50%] bg-[#bd9dff]/40 rounded-t-sm animate-pulse delay-300"></div>
-          <div className="w-1/6 h-[90%] bg-[#bd9dff] rounded-t-sm animate-pulse delay-500"></div>
-        </div>
-      </div>
-
-      <div className="hidden lg:block absolute left-[8%] bottom-[20%] w-56 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-5 rounded-lg -rotate-6 -z-0 opacity-30 group hover:opacity-100 transition-opacity duration-700">
-        <div className="w-full h-32 rounded-lg bg-[#000000] overflow-hidden flex items-center justify-center relative">
-          <img 
-            alt="Abstract gradient" 
-            className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000" 
-            src="/assets/login-bg.png"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080e1d] to-transparent"></div>
-        </div>
-        <div className="mt-4 flex justify-between items-center">
-          <div className="w-24 h-3 bg-[#424859] rounded-full"></div>
-          <div className="w-8 h-3 bg-[#ff716a]/40 rounded-full"></div>
-        </div>
-      </div>
     </div>
   );
 };
