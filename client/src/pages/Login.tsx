@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,8 +18,7 @@ import api from '../lib/axios';
 import { auth, googleProvider } from '../lib/firebase';
 import { 
   signInWithEmailAndPassword, 
-  signInWithRedirect, 
-  getRedirectResult,
+  signInWithPopup, 
   signInAnonymously, 
   signInWithPhoneNumber, 
   RecaptchaVerifier,
@@ -41,66 +40,6 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
-  // 🔄 Google Redirect ke baad data handle karne wala core logic
-  useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result && result.user) {
-          setLoading(true);
-          const user = result.user;
-
-          try {
-            // Step 1: Render backend par login hit karo
-            const { data } = await api.post('/auth/login', {
-              email: user.email,
-              password: user.uid 
-            });
-            
-            localStorage.setItem('auth_token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            window.dispatchEvent(new Event('auth-sync'));
-            
-            toast.success("Logged in via Google! 🚀");
-            setTimeout(() => { window.location.href = '/dashboard'; }, 500);
-
-          } catch (backendError: any) {
-            // Step 2: Agar user database mein nahi mila, toh register karo
-            if (backendError.response?.status === 401 || backendError.response?.status === 404 || backendError.response?.status === 400) {
-              try {
-                const { data } = await api.post('/auth/register', {
-                  name: user.displayName || 'Google User',
-                  email: user.email,
-                  password: user.uid
-                });
-
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                window.dispatchEvent(new Event('auth-sync'));
-                
-                toast.success("Welcome to PaisaTrack! 🎉");
-                setTimeout(() => { window.location.href = '/onboarding'; }, 500);
-              } catch (regError: any) {
-                console.error("Backend Registration Error:", regError);
-                toast.error(`Backend Registration Failed: ${regError.response?.data?.message || regError.message}`);
-              }
-            } else {
-              console.error("Backend Login Error:", backendError);
-              toast.error(`Backend Connection Error: ${backendError.response?.data?.message || backendError.message}`);
-            }
-          }
-        }
-      } catch (err: any) {
-        console.error("Google redirect handling error:", err);
-        toast.error(`Google Authentication Failed: ${err.message}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    handleRedirectResult();
-  }, [navigate]);
 
   const handleSuccessfulLogin = async (result: any) => {
     const user = result.user;
@@ -200,12 +139,21 @@ const Login: React.FC = () => {
     }
   };
 
+  // 🔥 YAHAN CHANGE HUA HAI: Wapas Pop-up par switch kiya hai with block detection!
   const handleGoogleLogin = async () => {
+    setLoading(true);
     try {
-      await signInWithRedirect(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      await handleSuccessfulLogin(result);
     } catch (error: any) {
-      console.error(error);
-      toast.error(`Google Redirect Failed: ${error.message}`);
+      console.error("Google Auth Error:", error);
+      if (error.code === 'auth/popup-blocked') {
+        toast.error("⚠️ Pop-up blocked! Please click the icon in your browser's URL bar (top right) to allow pop-ups for PaisaTrack, then try again.", { duration: 6000 });
+      } else if (error.code !== 'auth/popup-closed-by-user') {
+        toast.error(`Google Login Failed: ${error.message}`);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -411,11 +359,25 @@ const Login: React.FC = () => {
           <div className="mt-8 pt-8 border-t border-[#424859]/20">
             <p className="text-center text-[10px] font-bold uppercase tracking-widest text-[#a5aabf] mb-6">Or continue with</p>
             <div className="grid grid-cols-2 gap-4">
-              <button onClick={handleGoogleLogin} className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group">
-                <img alt="Google" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaUxrQq8Lw7vVm57HYtlH6K6KvyyX0JzdxCtNLiX0ax7fnlkWvLtz685x6JjRzXlT8zOORhS_QyJ0xgKAGUSShnIekUKvwd3ZqdsuJ3JfdhBS5gY8QLkvKslg9Q1H7KQ38Lx6HRfvWSET-wtD18JUuoAIpZwe9VIPM2jleTb_Ig9ZdvQ1JvJiPAM1ZiY_LpOdYg8HberYj6i96Wn7ySARiMlVMBN8isQmPZhiNQbcNURj0cEy4qS98mdUTVFwgQdPn5VYBJiDS7zQ"/>
-                <span className="text-xs font-semibold">Google</span>
+              <button 
+                onClick={handleGoogleLogin} 
+                disabled={loading}
+                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors group disabled:opacity-50"
+              >
+                {loading ? (
+                  <div className="w-4 h-4 border-2 border-[#bd9dff] border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <img alt="Google" className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaUxrQq8Lw7vVm57HYtlH6K6KvyyX0JzdxCtNLiX0ax7fnlkWvLtz685x6JjRzXlT8zOORhS_QyJ0xgKAGUSShnIekUKvwd3ZqdsuJ3JfdhBS5gY8QLkvKslg9Q1H7KQ38Lx6HRfvWSET-wtD18JUuoAIpZwe9VIPM2jleTb_Ig9ZdvQ1JvJiPAM1ZiY_LpOdYg8HberYj6i96Wn7ySARiMlVMBN8isQmPZhiNQbcNURj0cEy4qS98mdUTVFwgQdPn5VYBJiDS7zQ"/>
+                    <span className="text-xs font-semibold">Google</span>
+                  </>
+                )}
               </button>
-              <button onClick={handleAnonymousLogin} className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white">
+              <button 
+                onClick={handleAnonymousLogin} 
+                disabled={loading}
+                className="flex items-center justify-center gap-2 py-3 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] rounded-md hover:bg-[#1d253b] transition-colors text-[#a5aabf] hover:text-white disabled:opacity-50"
+              >
                 <UserCircle size={16} />
                 <span className="text-xs font-semibold uppercase tracking-widest">Guest</span>
               </button>
@@ -435,6 +397,42 @@ const Login: React.FC = () => {
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#a5aabf]/60 leading-none">Bank-grade 256-bit encryption</span>
         </div>
       </motion.main>
+
+      {/* Decorations */}
+      <div className="hidden lg:block absolute right-[10%] top-[30%] w-64 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-6 rounded-lg rotate-3 -z-0 opacity-40">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-[#69f6b8]/20 flex items-center justify-center text-[#69f6b8]">
+            <TrendingUp size={20} />
+          </div>
+          <div>
+            <div className="w-20 h-2 bg-[#424859] rounded-full mb-1"></div>
+            <div className="w-12 h-1.5 bg-[#424859]/50 rounded-full"></div>
+          </div>
+        </div>
+        <div className="w-full h-24 rounded-md bg-[#0c1324] mb-4 flex items-end p-2 gap-1 overflow-hidden">
+          <div className="w-1/6 h-[20%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse"></div>
+          <div className="w-1/6 h-[40%] bg-[#bd9dff]/30 rounded-t-sm animate-pulse delay-75"></div>
+          <div className="w-1/6 h-[30%] bg-[#bd9dff]/20 rounded-t-sm animate-pulse delay-150"></div>
+          <div className="w-1/6 h-[70%] bg-[#bd9dff]/60 rounded-t-sm animate-pulse delay-200"></div>
+          <div className="w-1/6 h-[50%] bg-[#bd9dff]/40 rounded-t-sm animate-pulse delay-300"></div>
+          <div className="w-1/6 h-[90%] bg-[#bd9dff] rounded-t-sm animate-pulse delay-500"></div>
+        </div>
+      </div>
+
+      <div className="hidden lg:block absolute left-[8%] bottom-[20%] w-56 bg-[rgba(29,37,59,0.6)] backdrop-blur-[20px] border border-[rgba(111,117,136,0.2)] p-5 rounded-lg -rotate-6 -z-0 opacity-30 group hover:opacity-100 transition-opacity duration-700">
+        <div className="w-full h-32 rounded-lg bg-[#000000] overflow-hidden flex items-center justify-center relative">
+          <img 
+            alt="Abstract gradient" 
+            className="w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000" 
+            src="/assets/login-bg.png"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080e1d] to-transparent"></div>
+        </div>
+        <div className="mt-4 flex justify-between items-center">
+          <div className="w-24 h-3 bg-[#424859] rounded-full"></div>
+          <div className="w-8 h-3 bg-[#ff716a]/40 rounded-full"></div>
+        </div>
+      </div>
     </div>
   );
 };
