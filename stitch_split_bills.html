@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Split Bills - PaisaTrack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#006c49",
+                    "inverse-surface": "#faf8ff",
+                    "on-surface": "#e0e5fb",
+                    "tertiary": "#ff716a",
+                    "on-secondary-container": "#e1ffec",
+                    "on-error": "#490013",
+                    "error-dim": "#d73357",
+                    "primary": "#bd9dff",
+                    "surface-variant": "#1d253b",
+                    "surface-container-lowest": "#000000",
+                    "primary-dim": "#8a4cfc",
+                    "surface-tint": "#bd9dff",
+                    "primary-container": "#b28cff",
+                    "on-secondary-fixed": "#00452d",
+                    "surface": "#080e1d",
+                    "on-primary-fixed": "#000000",
+                    "surface-bright": "#222c43",
+                    "surface-container-low": "#0c1324",
+                    "secondary-fixed": "#69f6b8",
+                    "on-secondary-fixed-variant": "#006544",
+                    "on-tertiary": "#490005",
+                    "surface-dim": "#080e1d",
+                    "primary-fixed": "#b28cff",
+                    "on-error-container": "#ffb2b9",
+                    "surface-container-high": "#171f33",
+                    "on-primary-fixed-variant": "#390083",
+                    "outline": "#6f7588",
+                    "on-tertiary-container": "#1f0001",
+                    "on-tertiary-fixed": "#3a0003",
+                    "surface-container-highest": "#1d253b",
+                    "tertiary-dim": "#ff716a",
+                    "secondary": "#69f6b8",
+                    "background": "#080e1d",
+                    "error": "#ff6e84",
+                    "tertiary-fixed": "#ff928b",
+                    "tertiary-container": "#fd4e4d",
+                    "on-primary": "#3c0089",
+                    "primary-fixed-dim": "#a67aff",
+                    "on-background": "#e0e5fb",
+                    "outline-variant": "#424859",
+                    "error-container": "#a70138",
+                    "tertiary-fixed-dim": "#ff7b74",
+                    "on-tertiary-fixed-variant": "#79000e",
+                    "inverse-on-surface": "#4f5566",
+                    "secondary-fixed-dim": "#58e7ab",
+                    "on-secondary": "#005a3c",
+                    "inverse-primary": "#742fe5",
+                    "on-surface-variant": "#a5aabf",
+                    "on-primary-container": "#2e006c",
+                    "secondary-dim": "#58e7ab",
+                    "surface-container": "#12192b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #080e1d; color: #e0e5fb; }
+        .glass-card {
+            background: rgba(29, 37, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(66, 72, 89, 0.2);
+            box-shadow: inset 2px 2px 10px rgba(255, 255, 255, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .gradient-btn {
+            background: linear-gradient(135deg, #8a4cfc 0%, #bd9dff 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-[#080e1d]/80 backdrop-blur-xl text-[#bd9dff] font-['Inter'] font-medium tracking-tight flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-gradient-to-b from-[#080e1d] to-transparent">
+<div class="text-2xl font-black text-[#bd9dff] tracking-tighter">PaisaTrack</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden bg-surface-container-high flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="portrait of a stylish young college student with a friendly expression in soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvR5s8Yhx3z3KoTVmW9WaTOVo8XpUeMwqo9VZoE3EdOTz76l752qOHPpARjO8fgiGMIWAYO8q9FPFTXsPxl_cUzJAUDb8G7Ynfwp3WJAtSCVpKJUD54lX-q5bql7dkvLrnMINYU1XyyWSw0YsoTJS0Zp3L6EXi7y4I_mx0jnQkcevw3ygpqQi2to61G2DRgVLUzH4ZpIOPnK0-I2Y1xxruvzYiMQkcBA7zcYIyi_KRZ_lqFCHnjpbL2J8hLZszhcW2sBIAGf2lx-0"/>
+</div>
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto">
+<!-- Dashboard Hero -->
+<section class="mb-10">
+<h1 class="text-[3.5rem] font-black leading-none tracking-tighter mb-2 italic">Split<span class="text-primary">.</span></h1>
+<p class="text-on-surface-variant font-medium tracking-wide body-lg opacity-80 uppercase text-xs">Keeping friendships clear, one bill at a time.</p>
+</section>
+<!-- Active Splits Section -->
+<section class="mb-10">
+<div class="flex items-center gap-2 mb-6">
+<span class="text-xl">🤝</span>
+<h2 class="text-xl font-bold tracking-tight">Active Splits</h2>
+</div>
+<div class="space-y-4">
+<!-- Owes You Card -->
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a young man with glasses smiling in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqmjpMlO8FOTCWU5zgDx3cVajdypdArFF_1FskfJEkkKMaPr9O4ypqIOnFJd90KGWQYqFGzlOXHeIaJz2qptfiB9KIEgMPIeDNyE9QmwUzQG14zs0GFEidUZQI09k2ACW9-vdPQ5oO8xyrYs-d3FnzfHny9GRxJzUbSzfeSrAoAXhXFdpdFAVR2XO5DruKn82C-qVNyRQCSfqZs5VA0gMmNFSi2APYOxcc2FpPRdr4QawEgl0QmhiRZoBAy-pwvQl53gnIsDlMPT8"/>
+</div>
+<div>
+<p class="text-xs uppercase tracking-widest text-secondary font-bold">Owes You</p>
+<h3 class="text-lg font-bold">Aditya</h3>
+</div>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black tracking-tighter text-secondary">₹250</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 py-3 rounded-full bg-surface-container-highest border border-outline-variant/30 text-sm font-bold flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">notifications</span> Remind
+                        </button>
+<button class="flex-1 py-3 rounded-full bg-secondary text-on-secondary-fixed font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">account_balance_wallet</span> UPI Pay
+                        </button>
+</div>
+</div>
+<!-- You Owe Card -->
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 relative overflow-hidden">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-tertiary">
+<img class="w-full h-full object-cover" data-alt="Stylish young woman with a vibrant personality looking at camera against soft city background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgMvnM9OWeBOl8Wen1OITAFHEyiWUteqrp7e0stfq4HZ9ll_m3LGDL774d-UMT-FkXbUfX6h5h2Qr49lBcVoDQbJD0K37Na9K0OOA5PVsV2I1fmC6su8CWhFvlB3vXxmLDUAWrNd3GVZ5jQyWtYINIjdJX2DYlqpdk-xJRXdlZzaL5U7hjWdDWCUWYK8yFo50dyy8H-0HBk_FqTE_AOcuy7WSbwZvr6Uns8vBkQgP5Dr4Ro3MXLBqbu7JF46lNJkZl6Qnw5TiHT8s"/>
+</div>
+<div>
+<p class="text-xs uppercase tracking-widest text-tertiary font-bold">You Owe</p>
+<h3 class="text-lg font-bold">Priya</h3>
+</div>
+</div>
+<div class="text-right">
+<span class="text-2xl font-black tracking-tighter text-tertiary">₹120</span>
+</div>
+</div>
+<button class="w-full py-4 rounded-full gradient-btn text-on-primary-fixed font-bold flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(189,157,255,0.2)]">
+                        Pay Priya <span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Quick Add Split (Bento Style) -->
+<section class="mb-10">
+<div class="flex items-center gap-2 mb-6">
+<span class="text-xl">➕</span>
+<h2 class="text-xl font-bold tracking-tight">New Split</h2>
+</div>
+<div class="glass-card rounded-lg p-8">
+<div class="mb-8 text-center">
+<label class="text-xs uppercase tracking-[0.2em] text-on-surface-variant mb-2 block font-bold">Amount to Split</label>
+<input class="bg-transparent border-none text-center text-5xl font-black tracking-tighter text-primary placeholder:text-surface-variant focus:ring-0 w-full" placeholder="₹0.00" type="text"/>
+</div>
+<div class="mb-8">
+<label class="text-xs uppercase tracking-[0.2em] text-on-surface-variant mb-4 block font-bold">Select Friends</label>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<div class="flex flex-col items-center gap-2 min-w-[64px]">
+<div class="w-14 h-14 rounded-full border-2 border-primary p-0.5">
+<img class="w-full h-full object-cover rounded-full" data-alt="Male college student avatar in a minimalist photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPf7vzrFPmF5s-caZgpHRcxHSsynQmC8nMuREl8PIPRBarJYgpEHRJ5UUaMIcFq3BjmrJQAnWrXsHRhNW-A3M9vuVpHaKsBfQNiivU_FNuXZ9Fwbyct6FpSgXF2gvug3Ey8aTjUScqFrYfdalonoSnxM_dyxwhVfTGI5zWuVQvFyHCEEstMx05xD17bscRb_prqoJ48ZvOuJjiT9yNrwSPSTASfyZdHICRobda01QxKGBFOOdd-xkq7fHSAHeREJfKeBCsUUBPAM0"/>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary">Rahul</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[64px] opacity-40 grayscale">
+<div class="w-14 h-14 rounded-full border border-outline-variant">
+<img class="w-full h-full object-cover rounded-full" data-alt="Portrait of a young woman with a calm expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHMNCXGkUl5SYvt4q7xDqOxxGKPoyY8Ipu7jC5CR3Y8h2B5WZZkp-7ORx-OUCZc1mWqxIsvIZBVeCJcqUw-6YDmHoVT9wIVFQOWyqF1suTnYh7a9j1TynKE9TAcKNyVA7Y_AMAZG1-luhmn6vdoi540XSlBXrM4-_k8GmVgDfnZoA57vLnpw9ylpgMyBGN1b5zCHEDzluEkb6sCmt2-vVT0ZLBKMoV8lbI44HvOBcW_jAC4FiNHqMX3pIlelPEPtOsveBJDYIy8Ow"/>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest">Sanya</span>
+</div>
+<div class="flex flex-col items-center gap-2 min-w-[64px] opacity-40 grayscale">
+<div class="w-14 h-14 rounded-full border border-outline-variant">
+<img class="w-full h-full object-cover rounded-full" data-alt="Close-up of a smiling young man in daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeNJU2z2Z7tJEEV27idF5Wn0cX2jh85S_-xF4dlED_XHeS1Z-zHY0HR2j7RRpKSLptXvxN__L0lCLBrfDUKp5vHEml1rlGYmUcAwh_PmitEo_OQgX3-uzpP_Sv_DLjjWa1kvwmRQM-sDZfI0EJzCRbTe4YsQxk7Hw2t7v7hl4raDwDbBir6-pwj3Syf5wyQaoNIfT9RcjHwWup80S2AnInL2aFg8idzGXxeBsl-lsWM9fi6s7LkCJHCDXQmkDz48jK5WPHitKLd2w"/>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest">Vikram</span>
+</div>
+<button class="w-14 h-14 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center text-outline shrink-0 hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">groups</span>
+<span class="text-sm font-semibold">Split Equally</span>
+</div>
+<div class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-primary">
+<span class="translate-x-5 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-on-primary-fixed shadow ring-0 transition duration-200 ease-in-out"></span>
+</div>
+</div>
+<button class="w-full py-4 rounded-full bg-primary text-on-primary font-black text-lg tracking-tight uppercase hover:scale-[1.02] active:scale-95 transition-transform duration-200">
+                    Create Split
+                </button>
+</div>
+</section>
+<!-- Settlement History -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="text-xl">📜</span>
+<h2 class="text-xl font-bold tracking-tight">Recent Settlements</h2>
+</div>
+<button class="text-xs uppercase tracking-widest text-primary font-bold">View All</button>
+</div>
+<div class="space-y-3">
+<!-- History Item 1 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl border-l-4 border-secondary/50">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Settled with Tanmay</h4>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">Dinner at Leo's • Yesterday</p>
+</div>
+</div>
+<span class="font-black text-secondary">+₹580</span>
+</div>
+<!-- History Item 2 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-2xl border-l-4 border-tertiary/50">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined">outbound</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Settled with Isha</h4>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">Cabs to Airport • 2 days ago</p>
+</div>
+</div>
+<span class="font-black text-tertiary">-₹320</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-0 right-0 z-50 pointer-events-none px-4">
+<div class="bg-[#1a1f2e]/80 backdrop-blur-[30px] rounded-full mx-auto max-w-sm flex justify-around items-center px-4 py-3 border border-white/10 shadow-[0_0_24px_rgba(189,157,255,0.15)] pointer-events-auto">
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+</a>
+<!-- Active Tab: Add Split/Track Changes implies action -->
+<a class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-[#bd9dff] after:rounded-full text-[#bd9dff] scale-110" href="#">
+<span class="material-symbols-outlined">track_changes</span>
+</a>
+<div class="relative -top-8">
+<button class="w-14 h-14 rounded-full gradient-btn text-on-primary-fixed shadow-lg flex items-center justify-center active:scale-95 duration-200">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+</a>
+</div>
+</nav>
+</body></html>

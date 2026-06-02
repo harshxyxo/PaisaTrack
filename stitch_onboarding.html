@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PaisaTrack Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#00452d",
+                        "surface-dim": "#080e1d",
+                        "inverse-surface": "#faf8ff",
+                        "outline": "#6f7588",
+                        "surface-variant": "#1d253b",
+                        "inverse-on-surface": "#4f5566",
+                        "outline-variant": "#424859",
+                        "on-tertiary": "#490005",
+                        "tertiary-fixed-dim": "#ff7b74",
+                        "on-tertiary-fixed": "#3a0003",
+                        "on-background": "#e0e5fb",
+                        "on-surface-variant": "#a5aabf",
+                        "on-tertiary-fixed-variant": "#79000e",
+                        "surface": "#080e1d",
+                        "surface-container": "#12192b",
+                        "on-primary-fixed": "#000000",
+                        "error-dim": "#d73357",
+                        "on-secondary-fixed-variant": "#006544",
+                        "secondary": "#69f6b8",
+                        "tertiary-fixed": "#ff928b",
+                        "secondary-fixed": "#69f6b8",
+                        "on-error-container": "#ffb2b9",
+                        "surface-container-lowest": "#000000",
+                        "on-secondary-container": "#e1ffec",
+                        "secondary-fixed-dim": "#58e7ab",
+                        "surface-container-highest": "#1d253b",
+                        "surface-bright": "#222c43",
+                        "on-tertiary-container": "#1f0001",
+                        "tertiary": "#ff716a",
+                        "primary-dim": "#8a4cfc",
+                        "primary": "#bd9dff",
+                        "surface-container-low": "#0c1324",
+                        "surface-container-high": "#171f33",
+                        "on-secondary": "#005a3c",
+                        "tertiary-container": "#fd4e4d",
+                        "error-container": "#a70138",
+                        "background": "#080e1d",
+                        "on-primary-container": "#2e006c",
+                        "error": "#ff6e84",
+                        "inverse-primary": "#742fe5",
+                        "on-primary-fixed-variant": "#390083",
+                        "secondary-dim": "#58e7ab",
+                        "primary-fixed": "#b28cff",
+                        "surface-tint": "#bd9dff",
+                        "tertiary-dim": "#ff716a",
+                        "on-primary": "#3c0089",
+                        "primary-fixed-dim": "#a67aff",
+                        "primary-container": "#b28cff",
+                        "on-surface": "#e0e5fb",
+                        "secondary-container": "#006c49",
+                        "on-error": "#490013"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(29, 37, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(111, 117, 136, 0.2);
+        }
+        .gradient-glow {
+            background: linear-gradient(135deg, #8a4cfc 0%, #bd9dff 100%);
+            box-shadow: 0 0 24px rgba(189, 157, 255, 0.25);
+        }
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex items-center justify-center overflow-hidden selection:bg-primary-dim selection:text-white">
+<!-- Top Navigation Anchor (Suppressed context: Onboarding) -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-6 h-16 max-w-md mx-auto">
+<div class="text-xl font-black tracking-tighter text-violet-400 drop-shadow-[0_0_8px_rgba(189,157,255,0.4)]">
+            PaisaTrack
+        </div>
+<button class="text-on-surface-variant font-medium text-sm hover:text-primary transition-colors">
+            Skip
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md h-screen relative flex flex-col items-center justify-center overflow-hidden">
+<!-- Background Accents -->
+<div class="absolute top-1/4 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-1/4 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-[100px]"></div>
+<!-- Slider Container -->
+<div class="flex overflow-x-auto snap-x snap-mandatory w-full h-full hide-scroll">
+<!-- Slide 1: Track every rupee -->
+<section class="flex-shrink-0 w-full h-full snap-center flex flex-col items-center justify-center px-8 text-center pt-20">
+<div class="relative w-full aspect-square max-w-[280px] mb-12">
+<div class="absolute inset-0 bg-primary/20 rounded-full blur-3xl"></div>
+<div class="glass-panel w-full h-full rounded-xl flex items-center justify-center p-8 overflow-hidden relative group">
+<img alt="Digital wallet" class="w-full h-full object-cover rounded-lg mix-blend-lighten opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="Futuristic digital wallet hovering in deep space with violet glowing energy lines and floating currency symbols" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4-mLEZFNkNuj1Ht-lT79CiOwc_HdNpoUM-gORuqnGkP_iq4s79MbbXe1hBS8qeciv5bXltniqv_l7JAwIIIKKee1d0EsNZAgOD5DCH9nap-SoCAjctMPnU8Xd8wOeJLhSPEIMfXu8LDgJUYIBLf-mShKEbTvIxow8KH7E3hlqenhn0hGrMsdI_Jhod6cLFNzFRlvDIybiouXUqdUr3NLoNPZJI2Ds890CWbbWd8N3RLO1nhhOJJjrRuHCBAW8KFAnIECu8z3GuS0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim/80 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-left">
+<span class="material-symbols-outlined text-primary text-4xl mb-2" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<div class="text-xs uppercase tracking-[0.2em] text-primary/60 font-bold">Total Control</div>
+</div>
+</div>
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-on-surface leading-[1.1]">
+                    Track every <span class="text-primary italic">rupee</span>
+</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-[280px]">
+                    Automatic expense logging for the modern digital native.
+                </p>
+</section>
+<!-- Slide 2: Split bills instantly -->
+<section class="flex-shrink-0 w-full h-full snap-center flex flex-col items-center justify-center px-8 text-center pt-20">
+<div class="relative w-full aspect-square max-w-[280px] mb-12">
+<div class="absolute inset-0 bg-secondary/20 rounded-full blur-3xl"></div>
+<div class="glass-panel w-full h-full rounded-xl flex items-center justify-center p-8 overflow-hidden relative group">
+<img alt="Friends hanging out" class="w-full h-full object-cover rounded-lg opacity-70 grayscale hover:grayscale-0 transition-all duration-700" data-alt="Group of diverse young friends laughing together in a neon-lit urban cafe with soft atmospheric purple lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3BF49e1dUe7q-TvOLF93jTNkf4XdMw4h60LdkePekFCh4ge01lT4aHDDEm-mc6QmdCW5eOnBr1t81vA7-aMJoYnvJV3big9arI6JxUrOJXnSswURPnZWGewbzfGD_mjB09KLfsWcGf3pmsy_o_DCKkySw7TMnyWQM0fv75vLe1qUD7sAkDDS_tqKe_ooWX8vmqm8CMxn6OSIXwyhN8XcDG-Uf69Cd4KQALFS-Wq3dhqnD37ZeZ7W6mkoJ-ls4iQBb7nNwp5rP5Dk"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-surface-container-highest/60 to-transparent"></div>
+<div class="absolute top-6 right-6 flex -space-x-4">
+<div class="w-10 h-10 rounded-full border-2 border-primary bg-surface-container flex items-center justify-center text-xs font-bold">JD</div>
+<div class="w-10 h-10 rounded-full border-2 border-secondary bg-surface-container flex items-center justify-center text-xs font-bold">AK</div>
+<div class="w-10 h-10 rounded-full border-2 border-tertiary bg-surface-container flex items-center justify-center text-xs font-bold">SM</div>
+</div>
+</div>
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-on-surface leading-[1.1]">
+                    Split bills <span class="text-secondary italic">instantly</span>
+</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-[280px]">
+                    No more awkward "Who owes what?" at the end of the night.
+                </p>
+</section>
+<!-- Slide 3: Beat your goals -->
+<section class="flex-shrink-0 w-full h-full snap-center flex flex-col items-center justify-center px-8 text-center pt-20">
+<div class="relative w-full aspect-square max-w-[280px] mb-12">
+<div class="absolute inset-0 bg-tertiary/20 rounded-full blur-3xl"></div>
+<div class="glass-panel w-full h-full rounded-xl flex items-center justify-center p-8 overflow-hidden relative group">
+<img alt="Gym motivation" class="w-full h-full object-cover rounded-lg opacity-80 group-hover:rotate-3 transition-transform duration-700" data-alt="Golden winner trophy on a sleek pedestal with dramatic spotlighting and dust particles dancing in the light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8N1lZE5MFWYxFq_KEkATzMtt-iUAXdqXiP9V_gJUFuy8jouH2MUGKutc9pnG_9TWD9QQS5AYQmsgHgNzAyrgoTYhvb78unVQ7LgZNBIGzN-zwoDSODyX1kRnKyVFf4e_LALWta4x5dheSfGbmJXqstkLXnDFX_1OpNouzC-mIT9sHUiCvciRCX8BYmzMghLXJxAbqZgz9gP_VFiPHh15yfsCKweIV1wXLilMlwAwsuLUx81RNuqHcsb_ymeBDJU-mM7jURxIYqgE"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-24 h-24 bg-tertiary/20 backdrop-blur-md rounded-full flex items-center justify-center border border-tertiary/30 animate-pulse">
+<span class="material-symbols-outlined text-tertiary text-5xl" style="font-variation-settings: 'FILL' 1;">trophy</span>
+</div>
+</div>
+</div>
+</div>
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-on-surface leading-[1.1]">
+                    Beat your <span class="text-tertiary italic">goals</span>
+</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-[280px]">
+                    From a new sneaker drop to a trip to Goa—we get you there.
+                </p>
+</section>
+</div>
+<!-- Navigation and Indicator Footer -->
+<footer class="absolute bottom-0 left-0 w-full p-8 flex flex-col items-center gap-8">
+<!-- Dots Indicator -->
+<div class="flex gap-3 items-center">
+<div class="w-8 h-1.5 rounded-full bg-primary"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-surface-container-highest"></div>
+</div>
+<!-- Action Buttons Area -->
+<div class="w-full flex items-center justify-between gap-4">
+<!-- This would usually be dynamic, but since we are showing the full view as static HTML, we represent the Final Slide CTA -->
+<button class="flex-1 h-14 rounded-full gradient-glow text-on-primary-container font-bold text-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                    Get Started
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+<div class="h-6"></div> <!-- Safe area spacer -->
+</footer>
+</main>
+<!-- Persistent Background Overlay for Premium Feel -->
+<div class="fixed inset-0 pointer-events-none z-[-1] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5"></div>
+</body></html>

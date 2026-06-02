@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(29, 37, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 0.5px solid rgba(66, 72, 89, 0.2);
+        }
+        .premium-glow {
+            box-shadow: 0 0 24px rgba(189, 157, 255, 0.15);
+        }
+        body {
+            background-color: #080e1d;
+            color: #e0e5fb;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#006c49",
+                      "inverse-surface": "#faf8ff",
+                      "on-surface": "#e0e5fb",
+                      "tertiary": "#ff716a",
+                      "on-secondary-container": "#e1ffec",
+                      "on-error": "#490013",
+                      "error-dim": "#d73357",
+                      "primary": "#bd9dff",
+                      "surface-variant": "#1d253b",
+                      "surface-container-lowest": "#000000",
+                      "primary-dim": "#8a4cfc",
+                      "surface-tint": "#bd9dff",
+                      "primary-container": "#b28cff",
+                      "on-secondary-fixed": "#00452d",
+                      "surface": "#080e1d",
+                      "on-primary-fixed": "#000000",
+                      "surface-bright": "#222c43",
+                      "surface-container-low": "#0c1324",
+                      "secondary-fixed": "#69f6b8",
+                      "on-secondary-fixed-variant": "#006544",
+                      "on-tertiary": "#490005",
+                      "surface-dim": "#080e1d",
+                      "primary-fixed": "#b28cff",
+                      "on-error-container": "#ffb2b9",
+                      "surface-container-high": "#171f33",
+                      "on-primary-fixed-variant": "#390083",
+                      "outline": "#6f7588",
+                      "on-tertiary-container": "#1f0001",
+                      "on-tertiary-fixed": "#3a0003",
+                      "surface-container-highest": "#1d253b",
+                      "tertiary-dim": "#ff716a",
+                      "secondary": "#69f6b8",
+                      "background": "#080e1d",
+                      "error": "#ff6e84",
+                      "tertiary-fixed": "#ff928b",
+                      "tertiary-container": "#fd4e4d",
+                      "on-primary": "#3c0089",
+                      "primary-fixed-dim": "#a67aff",
+                      "on-background": "#e0e5fb",
+                      "outline-variant": "#424859",
+                      "error-container": "#a70138",
+                      "tertiary-fixed-dim": "#ff7b74",
+                      "on-tertiary-fixed-variant": "#79000e",
+                      "inverse-on-surface": "#4f5566",
+                      "secondary-fixed-dim": "#58e7ab",
+                      "on-secondary": "#005a3c",
+                      "inverse-primary": "#742fe5",
+                      "on-surface-variant": "#a5aabf",
+                      "on-primary-container": "#2e006c",
+                      "secondary-dim": "#58e7ab",
+                      "surface-container": "#12192b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-[#080e1d]/80 backdrop-blur-xl flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close up portrait of a stylish young male college student with glasses and a friendly smile in a minimalist digital art style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvJbxdhSpC7Je5xJQ41DjNggLyE7M8XvTH7Oa8szsHbPg0VvCBJTs4hBJuEKcmzZ3ke3YGaKiQbgNrSQrUSnFXym1Q8uxnwaSGCitsBFs6wntQCoT2StnWF5aw1TxwpBiU5ezWZYh1oHfPY7j3DffD_GSFThk1bSCCBmQedJSv4Ycux-SCRGwIjjguR5NQWSXH7D1gwELz2svjPCdleHVBZtq9h9fa0h6Jb0nDTvbNLwOOjcrkHAZD5CB6yav1zlGOjQbaVz_5f1Q"/>
+</div>
+<span class="text-2xl font-black text-[#bd9dff] tracking-tighter">PaisaTrack</span>
+</div>
+<button class="text-[#bd9dff] hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-2xl">settings</span>
+</button>
+</header>
+<main class="pt-24 px-6 max-w-5xl mx-auto">
+<!-- Month Selector -->
+<section class="flex items-center justify-center mb-8">
+<div class="flex items-center gap-6 bg-surface-container-low px-6 py-3 rounded-full border border-outline-variant/10">
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">April 2026</h1>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Bento Grid for Analytics -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Spending Trend (Bar Chart) -->
+<div class="md:col-span-8 glass-card p-8 rounded-lg">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-lg font-bold">Spending Trend</h2>
+<span class="text-secondary text-sm font-medium">Daily Average: ₹420</span>
+</div>
+<div class="h-48 flex items-end justify-between gap-1">
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[60%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[30%]"></div>
+<div class="w-full bg-primary/60 rounded-t-sm h-[80%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[45%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[55%]"></div>
+<div class="w-full bg-tertiary rounded-t-sm h-[95%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[20%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[35%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[50%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[60%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[30%]"></div>
+<div class="w-full bg-primary/60 rounded-t-sm h-[70%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[45%]"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] text-on-surface-variant uppercase tracking-widest">
+<span>Apr 01</span>
+<span>Apr 15</span>
+<span>Apr 30</span>
+</div>
+</div>
+<!-- Spending Breakdown (Pie Chart) -->
+<div class="md:col-span-4 glass-card p-8 rounded-lg flex flex-col items-center justify-center">
+<h2 class="text-lg font-bold mb-6 self-start">Breakdown</h2>
+<div class="relative w-40 h-40">
+<!-- Fake SVG Pie Chart -->
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<circle cx="18" cy="18" fill="transparent" r="15.9" stroke="#1d253b" stroke-width="3.8"></circle>
+<circle cx="18" cy="18" fill="transparent" r="15.9" stroke="#bd9dff" stroke-dasharray="45 100" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="transparent" r="15.9" stroke="#ff716a" stroke-dasharray="30 100" stroke-dashoffset="-45" stroke-width="4"></circle>
+<circle cx="18" cy="18" fill="transparent" r="15.9" stroke="#69f6b8" stroke-dasharray="25 100" stroke-dashoffset="-75" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="text-2xl font-bold">₹12.4k</span>
+<span class="text-[10px] text-on-surface-variant uppercase">Total</span>
+</div>
+</div>
+<div class="mt-6 w-full space-y-2">
+<div class="flex justify-between items-center text-sm">
+<span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-primary"></div> Food</span>
+<span class="font-medium">45%</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-tertiary"></div> Shopping</span>
+<span class="font-medium">30%</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-secondary"></div> Savings</span>
+<span class="font-medium">25%</span>
+</div>
+</div>
+</div>
+<!-- Insight Cards -->
+<div class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Food Insight -->
+<div class="glass-card p-6 rounded-lg relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<p class="text-lg font-medium leading-relaxed">
+                        🔥 You spent <span class="text-tertiary">₹2,400</span> on food — 35% more than last month
+                    </p>
+</div>
+<!-- Waste Insight (High Glass) -->
+<div class="bg-surface-container-highest/80 backdrop-blur-2xl border border-primary/20 p-6 rounded-lg premium-glow">
+<div class="flex items-start gap-4">
+<div class="bg-primary-container/20 p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div>
+<p class="text-sm uppercase tracking-widest text-primary mb-1">Guilt Alert</p>
+<p class="text-lg font-bold leading-tight">Your biggest waste: Late night Swiggy orders</p>
+</div>
+</div>
+</div>
+<!-- Savings Insight (Green Accent) -->
+<div class="bg-secondary/10 border border-secondary/20 p-6 rounded-lg">
+<p class="text-lg font-medium leading-relaxed">
+                        ✅ You saved <span class="text-secondary">₹800 more</span> than last month — great job!
+                    </p>
+<div class="mt-4 flex items-center gap-2 text-secondary text-sm">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>Saving streak: 3 months</span>
+</div>
+</div>
+</div>
+<!-- Top Merchants -->
+<div class="md:col-span-12 glass-card p-8 rounded-lg">
+<h2 class="text-xl font-bold mb-8">Top Merchants</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Merchant 1 -->
+<div class="flex items-center gap-5 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center p-2">
+<img alt="Swiggy" class="w-full h-full object-contain" data-alt="minimalist clean orange swiggy delivery logo on dark background with premium texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHtefbuVhs5DQl-L2g_Z7hIOuoUibi831zYfmolJH-Pds6W7nVXfBgqohvDphNNGPrjQvbdR7QXWZlDa4xelFpESigz28632h5FnRM7GQe39yho3bR0Kxp9YCM7Gbr6cyPhgIM7CX14b4qBmDXReJ2WnUrC7qvrqZGfDtQSAnWm3lj0VF9t1uLsLTkXHOF4Bl9ZNa0qEKrgLCDnVbgbfnsTdguNckOkMD-xloygNHjSVe5oBR26wMTgTDJ-kwMku3oHOJ-ip6xuPU"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h3 class="font-bold">Swiggy</h3>
+<span class="text-tertiary font-bold">₹4,250</span>
+</div>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">12 Transactions</p>
+</div>
+</div>
+<!-- Merchant 2 -->
+<div class="flex items-center gap-5 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center p-2">
+<img alt="Zomato" class="w-full h-full object-contain" data-alt="minimalist sleek red zomato logo brand identity on dark clean surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUrsuyyFEwUtc2NP9-NJbLvAYXFss8IgfZBUZ5GPR4ghBWtJTj7mevYr6ZDLKHRuZBT7nlSr_T8uID_OhjF3sKSZLpoksvPZtRgcEZoMbQuh7QrzWgGee3LhSWyoSOD0jv0XAEHibGDpT3nG2L2ELRpn2zr0coftDTMpNwvzwmdpfAtyUEX7RUmkr6Z8xrQzgk3b60P1UHdtC1u8OyrLFZqAsHfBULU_oVQX8ifMvDgmXQWYVxMJ7D-nZF93O5zKDBg_M05z0dR6k"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h3 class="font-bold">Zomato</h3>
+<span class="text-tertiary font-bold">₹3,100</span>
+</div>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">8 Transactions</p>
+</div>
+</div>
+<!-- Merchant 3 -->
+<div class="flex items-center gap-5 p-4 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center p-2">
+<img alt="Uber" class="w-full h-full object-contain filter invert opacity-80" data-alt="modern uber logo white on dark background minimalist ride sharing icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLuecKu5r5R5GVItOynKH2Wvay8hH8JMQ0lSjb3koLeNpwiUNh8ZZ1BwNUhtCFdfJuixVUm9dfaEZjS4LTqCpIp0a2xvAQ807HR5lQi2HuMzNFC53IfvAAmQNi4xdqgvhkTwM_lqnwRf2-sT4ww6deD-Z7FVDryU7Ei4gXSpf3Toaoj0Ypph8w--0_db6LZsb1PZ7F0lN6Gw62FFYECSVGwSztiUo1vgBrlkWBOfHGiijIAksWxJ4oDurwjdKm3k1s8tnQW3tnDxE"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<h3 class="font-bold">Uber</h3>
+<span class="text-primary font-bold">₹1,850</span>
+</div>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest mt-1">6 Transactions</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-center">
+<div class="bg-[#1a1f2e]/80 backdrop-blur-[30px] mx-4 w-[calc(100%-2rem)] max-w-md rounded-full shadow-[0_0_24px_rgba(189,157,255,0.15)] border border-white/10 flex justify-around items-center px-4 py-3">
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-110 transition-transform">home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-110 transition-transform">add_circle</span>
+</a>
+<a class="flex flex-col items-center justify-center relative text-[#bd9dff] group after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-[#bd9dff] after:rounded-full" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-110 transition-transform">analytics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-110 transition-transform">track_changes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-110 transition-transform">person</span>
+</a>
+</div>
+</nav>
+</body></html>

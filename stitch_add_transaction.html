@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#006c49",
+                    "inverse-surface": "#faf8ff",
+                    "on-surface": "#e0e5fb",
+                    "tertiary": "#ff716a",
+                    "on-secondary-container": "#e1ffec",
+                    "on-error": "#490013",
+                    "error-dim": "#d73357",
+                    "primary": "#bd9dff",
+                    "surface-variant": "#1d253b",
+                    "surface-container-lowest": "#000000",
+                    "primary-dim": "#8a4cfc",
+                    "surface-tint": "#bd9dff",
+                    "primary-container": "#b28cff",
+                    "on-secondary-fixed": "#00452d",
+                    "surface": "#080e1d",
+                    "on-primary-fixed": "#000000",
+                    "surface-bright": "#222c43",
+                    "surface-container-low": "#0c1324",
+                    "secondary-fixed": "#69f6b8",
+                    "on-secondary-fixed-variant": "#006544",
+                    "on-tertiary": "#490005",
+                    "surface-dim": "#080e1d",
+                    "primary-fixed": "#b28cff",
+                    "on-error-container": "#ffb2b9",
+                    "surface-container-high": "#171f33",
+                    "on-primary-fixed-variant": "#390083",
+                    "outline": "#6f7588",
+                    "on-tertiary-container": "#1f0001",
+                    "on-tertiary-fixed": "#3a0003",
+                    "surface-container-highest": "#1d253b",
+                    "tertiary-dim": "#ff716a",
+                    "secondary": "#69f6b8",
+                    "background": "#080e1d",
+                    "error": "#ff6e84",
+                    "tertiary-fixed": "#ff928b",
+                    "tertiary-container": "#fd4e4d",
+                    "on-primary": "#3c0089",
+                    "primary-fixed-dim": "#a67aff",
+                    "on-background": "#e0e5fb",
+                    "outline-variant": "#424859",
+                    "error-container": "#a70138",
+                    "tertiary-fixed-dim": "#ff7b74",
+                    "on-tertiary-fixed-variant": "#79000e",
+                    "inverse-on-surface": "#4f5566",
+                    "secondary-fixed-dim": "#58e7ab",
+                    "on-secondary": "#005a3c",
+                    "inverse-primary": "#742fe5",
+                    "on-surface-variant": "#a5aabf",
+                    "on-primary-container": "#2e006c",
+                    "secondary-dim": "#58e7ab",
+                    "surface-container": "#12192b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(29, 37, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(111, 117, 136, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-numpad-btn {
+            @apply flex items-center justify-center text-2xl font-medium py-6 rounded-2xl transition-all active:scale-95 active:bg-white/10;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30 min-h-screen flex flex-col">
+<!-- Top Navigation Shell -->
+<nav class="flex justify-between items-center w-full px-6 py-4 bg-[#080e1d]/80 backdrop-blur-xl fixed top-0 z-50 no-line tonal-shift bg-gradient-to-b from-[#080e1d] to-transparent">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary/20 bg-surface-container overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close up headshot of a stylish young male college student with glasses and a friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRBf1nmGE4CIwT26RlD7SLdJByT7_RA-FEZuU3gFONdDRK1ctVNOeqIbAWhtGteTserhiUTef2zmYRwhH2CQwH975TktkTgVdETaPmn82Anf6oOSOiHOXvot5qRGrVuhY25FCpZjY7KuyRJlDAq1C0rgrVQWVLKLM2pHNxAbfenMOcrvKpV7xt-f7HvrGJObnq5nqcbWMKJYftUzwHIJWwS2oITEafF1AsMZB9mDX_l1UXEbW8Moas1GR7NaWsmY6BgBPzTuEnHGs"/>
+</div>
+<span class="text-2xl font-black text-[#bd9dff] tracking-tighter font-headline">PaisaTrack</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-white/60 hover:opacity-80 transition-opacity">settings</button>
+</div>
+</nav>
+<!-- Main Content: Full Screen Add Transaction View -->
+<main class="flex-1 pt-24 pb-32 px-6 max-w-lg mx-auto w-full">
+<!-- Header & Toggle Section -->
+<header class="flex flex-col items-center mb-8">
+<div class="flex bg-surface-container p-1 rounded-full mb-8 w-fit glass-panel">
+<button class="px-8 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 text-white/40">Income</button>
+<button class="px-8 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 bg-primary text-on-primary shadow-[0_0_20px_rgba(189,157,255,0.3)]">Expense</button>
+</div>
+<!-- Amount Input Display -->
+<div class="text-center">
+<div class="text-on-surface-variant text-sm font-label tracking-widest uppercase mb-1">How much did you spend?</div>
+<div class="text-[5rem] font-black tracking-tighter leading-none text-primary drop-shadow-[0_0_15px_rgba(189,157,255,0.2)]">₹0</div>
+</div>
+</header>
+<!-- Category Horizontal Scroll -->
+<section class="mb-10">
+<div class="flex overflow-x-auto pb-4 gap-3 no-scrollbar snap-x snap-mandatory">
+<div class="flex-shrink-0 snap-center px-5 py-3 rounded-2xl glass-panel text-on-surface flex items-center gap-2 border border-primary/40 bg-primary/10">
+<span class="text-xl">🍕</span>
+<span class="text-sm font-medium">Food</span>
+</div>
+<div class="flex-shrink-0 snap-center px-5 py-3 rounded-2xl glass-panel text-white/60 flex items-center gap-2">
+<span class="text-xl">🚗</span>
+<span class="text-sm font-medium">Travel</span>
+</div>
+<div class="flex-shrink-0 snap-center px-5 py-3 rounded-2xl glass-panel text-white/60 flex items-center gap-2">
+<span class="text-xl">🛍️</span>
+<span class="text-sm font-medium">Shopping</span>
+</div>
+<div class="flex-shrink-0 snap-center px-5 py-3 rounded-2xl glass-panel text-white/60 flex items-center gap-2">
+<span class="text-xl">🎮</span>
+<span class="text-sm font-medium">Entertainment</span>
+</div>
+<div class="flex-shrink-0 snap-center px-5 py-3 rounded-2xl glass-panel text-white/60 flex items-center gap-2">
+<span class="text-xl">💡</span>
+<span class="text-sm font-medium">Bills</span>
+</div>
+<div class="flex-shrink-0 snap-center px-5 py-3 rounded-2xl glass-panel text-white/60 flex items-center gap-2">
+<span class="text-xl">👥</span>
+<span class="text-sm font-medium">Split</span>
+</div>
+</div>
+</section>
+<!-- Transaction Details Bento -->
+<section class="grid grid-cols-2 gap-4 mb-10">
+<div class="col-span-2 glass-panel p-5 rounded-[2rem] flex flex-col gap-1">
+<span class="text-on-surface-variant text-xs font-label uppercase tracking-wider">Description</span>
+<input class="bg-transparent border-none p-0 text-on-surface text-lg font-medium focus:ring-0 w-full placeholder:text-white/20" type="text" value="Lunch with friends at canteen"/>
+</div>
+<div class="glass-panel p-5 rounded-[2rem] flex flex-col gap-1">
+<span class="text-on-surface-variant text-xs font-label uppercase tracking-wider">Date</span>
+<div class="flex items-center gap-2 text-on-surface font-medium">
+<span class="material-symbols-outlined text-primary text-lg">calendar_today</span>
+                    Today, April 24
+                </div>
+</div>
+<div class="glass-panel p-5 rounded-[2rem] flex flex-col gap-1">
+<span class="text-on-surface-variant text-xs font-label uppercase tracking-wider">Method</span>
+<div class="flex items-center gap-2 text-on-surface font-medium">
+<span class="material-symbols-outlined text-primary text-lg">payments</span>
+                    UPI
+                </div>
+</div>
+<div class="col-span-2 glass-panel p-5 rounded-[2rem] flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<span class="text-on-surface-variant text-xs font-label uppercase tracking-wider">Split with friend</span>
+<span class="text-white/40 text-sm">OFF</span>
+</div>
+<div class="w-12 h-6 bg-surface-container rounded-full relative border border-white/10">
+<div class="absolute left-1 top-1 w-4 h-4 bg-white/20 rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Custom Numpad Section -->
+<section class="grid grid-cols-3 gap-4 mb-10">
+<button class="custom-numpad-btn">1</button>
+<button class="custom-numpad-btn">2</button>
+<button class="custom-numpad-btn">3</button>
+<button class="custom-numpad-btn">4</button>
+<button class="custom-numpad-btn">5</button>
+<button class="custom-numpad-btn">6</button>
+<button class="custom-numpad-btn">7</button>
+<button class="custom-numpad-btn">8</button>
+<button class="custom-numpad-btn">9</button>
+<button class="custom-numpad-btn text-primary">.</button>
+<button class="custom-numpad-btn">0</button>
+<button class="custom-numpad-btn text-tertiary">
+<span class="material-symbols-outlined">backspace</span>
+</button>
+</section>
+<!-- CTA Action -->
+<button class="w-full bg-gradient-to-br from-primary-dim to-primary py-5 rounded-full text-on-primary-container font-bold text-lg shadow-[0_8px_32px_rgba(189,157,255,0.3)] active:scale-95 transition-transform">
+            Save Transaction
+        </button>
+</main>
+<!-- Floating Bottom Navigation -->
+<nav class="fixed bottom-6 left-0 right-0 flex justify-around items-center px-4 py-3 bg-[#1a1f2e]/80 backdrop-blur-[30px] mx-4 w-[calc(100%-2rem)] rounded-full z-50 no-line border border-white/10 shadow-[0_0_24px_rgba(189,157,255,0.15)]">
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+</a>
+<a class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-[#bd9dff] after:rounded-full text-[#bd9dff] scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">track_changes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+</a>
+</nav>
+</body></html>

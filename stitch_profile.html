@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#006c49",
+                    "inverse-surface": "#faf8ff",
+                    "on-surface": "#e0e5fb",
+                    "tertiary": "#ff716a",
+                    "on-secondary-container": "#e1ffec",
+                    "on-error": "#490013",
+                    "error-dim": "#d73357",
+                    "primary": "#bd9dff",
+                    "surface-variant": "#1d253b",
+                    "surface-container-lowest": "#000000",
+                    "primary-dim": "#8a4cfc",
+                    "surface-tint": "#bd9dff",
+                    "primary-container": "#b28cff",
+                    "on-secondary-fixed": "#00452d",
+                    "surface": "#080e1d",
+                    "on-primary-fixed": "#000000",
+                    "surface-bright": "#222c43",
+                    "surface-container-low": "#0c1324",
+                    "secondary-fixed": "#69f6b8",
+                    "on-secondary-fixed-variant": "#006544",
+                    "on-tertiary": "#490005",
+                    "surface-dim": "#080e1d",
+                    "primary-fixed": "#b28cff",
+                    "on-error-container": "#ffb2b9",
+                    "surface-container-high": "#171f33",
+                    "on-primary-fixed-variant": "#390083",
+                    "outline": "#6f7588",
+                    "on-tertiary-container": "#1f0001",
+                    "on-tertiary-fixed": "#3a0003",
+                    "surface-container-highest": "#1d253b",
+                    "tertiary-dim": "#ff716a",
+                    "secondary": "#69f6b8",
+                    "background": "#080e1d",
+                    "error": "#ff6e84",
+                    "tertiary-fixed": "#ff928b",
+                    "tertiary-container": "#fd4e4d",
+                    "on-primary": "#3c0089",
+                    "primary-fixed-dim": "#a67aff",
+                    "on-background": "#e0e5fb",
+                    "outline-variant": "#424859",
+                    "error-container": "#a70138",
+                    "tertiary-fixed-dim": "#ff7b74",
+                    "on-tertiary-fixed-variant": "#79000e",
+                    "inverse-on-surface": "#4f5566",
+                    "secondary-fixed-dim": "#58e7ab",
+                    "on-secondary": "#005a3c",
+                    "inverse-primary": "#742fe5",
+                    "on-surface-variant": "#a5aabf",
+                    "on-primary-container": "#2e006c",
+                    "secondary-dim": "#58e7ab",
+                    "surface-container": "#12192b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(29, 37, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(66, 72, 89, 0.2);
+            box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.05);
+        }
+        .primary-glow-btn {
+            background: linear-gradient(135deg, #8a4cfc 0%, #bd9dff 100%);
+        }
+        .guilt-glow {
+            box-shadow: 0 0 24px rgba(255, 113, 106, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary-container min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="bg-[#080e1d]/80 backdrop-blur-xl flex justify-between items-center w-full px-6 py-4 fixed top-0 z-40 no-line tonal-shift bg-gradient-to-b from-[#080e1d] to-transparent">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="Rahul Kumar" class="w-full h-full object-cover" data-alt="Close-up portrait of a stylish young Indian man in a navy sweater, soft studio lighting, high-end editorial photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW-3vM9gsr54QCr4O7VRoiHC6vC4LZaPqwDJVklpcYScuQ2UBGALfZM9D0FjXX1BhP_1iSLMIS7vI_xr40q-p8A6lTAE7_fv6lDygFN1CMRJDBt0MAfrmAYVo6ogxxcOXeV1-14oU4MYjl8yMuWtY7e2XUNR_T8NncboRgu93n1-Y73BRoFt-beyopnb0tx1eYpvpU0L2gITF5Rvob8_rvxluZ9H3jgdpDjWyv_QSlLi08bXZD3N7yy8cf8MH06BNVgc3J0tld2-M"/>
+</div>
+<span class="text-[#bd9dff] font-['Inter'] font-medium tracking-tight">Rahul's Space</span>
+</div>
+<h1 class="text-2xl font-black text-[#bd9dff] tracking-tighter">PaisaTrack</h1>
+<div class="flex items-center gap-2">
+<button class="text-white/60 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-2xl mx-auto">
+<!-- Hero Profile Section -->
+<section class="flex flex-col items-center text-center mb-10">
+<div class="relative mb-6">
+<div class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full"></div>
+<div class="w-32 h-32 rounded-xl overflow-hidden border-2 border-primary relative z-10">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a young Indian man with a friendly expression, professional lighting, modern minimalist background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB651ZMV4mEqVqFr1jcEcG81hqiCR9PMg2Y4326bcGhAosWd2dRpqGlOS1_rVeSA41jHpSsFlANU_X9wQN4pfKRTBbB7oHvnNaERVwHFx39hh5C-1DadfwzTJ4sjtvJY8XHx8a0hOtal8HIjyy0VhL6cXtwgZLKCT2T-dT7wb8CLWTOkZRB5GNKQUZgJRVBZpMbO9tQJGPQ--sBq72azWwsUIMWzHd-Eu_2rp2ciwPxWlgOUL47PMzqUF4GY-l5RBT_WH-50k-4PBE"/>
+</div>
+</div>
+<h2 class="text-4xl font-extrabold tracking-tight mb-1 text-white">Rahul Kumar</h2>
+<p class="text-on-surface-variant flex items-center gap-2 text-lg">
+<span class="material-symbols-outlined text-sm">school</span>
+                IIT Bombay
+            </p>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-2 gap-4 mb-10">
+<div class="glass-card col-span-2 p-6 rounded-lg flex items-center justify-between overflow-hidden relative group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl group-hover:bg-primary/20 transition-all duration-700"></div>
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1">Total Tracked</p>
+<p class="text-4xl font-black text-primary tracking-tighter">₹45k</p>
+</div>
+<div class="bg-primary/20 p-3 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-lg">
+<p class="text-on-surface-variant text-xs font-medium mb-2">Longevity</p>
+<p class="text-2xl font-bold text-white">8 Months</p>
+<p class="text-secondary text-xs mt-1">Active</p>
+</div>
+<div class="glass-card p-6 rounded-lg border-l-4 border-l-secondary/40">
+<p class="text-on-surface-variant text-xs font-medium mb-2">Total Saved</p>
+<p class="text-2xl font-bold text-secondary">₹12k</p>
+<div class="h-1 w-full bg-white/10 mt-3 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-3/4"></div>
+</div>
+</div>
+</section>
+<!-- Settings Section -->
+<section class="space-y-6">
+<h3 class="text-white font-bold text-xl flex items-center gap-2 px-2">
+<span class="material-symbols-outlined text-primary">tune</span>
+                Account Settings
+            </h3>
+<div class="space-y-3">
+<!-- UPI ID -->
+<div class="glass-card p-5 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high p-2.5 rounded-md">
+<span class="material-symbols-outlined text-on-surface-variant">contactless</span>
+</div>
+<div>
+<p class="text-white text-sm font-semibold">UPI ID</p>
+<p class="text-on-surface-variant text-xs font-mono">rahul@okaxis</p>
+</div>
+</div>
+<button class="text-primary p-2 hover:bg-primary/10 rounded-full transition-colors active:scale-90">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+</div>
+<!-- Theme Toggle -->
+<div class="glass-card p-5 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high p-2.5 rounded-md">
+<span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+</div>
+<div>
+<p class="text-white text-sm font-semibold">Dark Mode</p>
+<p class="text-on-surface-variant text-xs">Vibe checked</p>
+</div>
+</div>
+<div class="w-12 h-6 bg-primary rounded-full relative flex items-center px-1">
+<div class="absolute right-1 w-4 h-4 bg-on-primary rounded-full shadow-sm"></div>
+</div>
+</div>
+<!-- Export -->
+<div class="glass-card p-5 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high p-2.5 rounded-md">
+<span class="material-symbols-outlined text-on-surface-variant">ios_share</span>
+</div>
+<div>
+<p class="text-white text-sm font-semibold">Financial Report</p>
+<p class="text-on-surface-variant text-xs">Export as CSV</p>
+</div>
+</div>
+<button class="border border-primary text-primary px-4 py-1.5 rounded-full text-xs font-bold hover:bg-primary/10 transition-colors uppercase tracking-wider">
+                        Export
+                    </button>
+</div>
+</div>
+<!-- Premium Upsell -->
+<div class="p-6 rounded-lg primary-glow-btn relative overflow-hidden mt-8 shadow-[0_8px_32px_rgba(189,157,255,0.3)]">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent"></div>
+<div class="relative z-10">
+<h4 class="text-on-primary-container font-black text-xl mb-1 italic">Go PaisaTrack PRO</h4>
+<p class="text-on-primary-container/80 text-sm mb-4">Unlock advanced bento analytics and custom guilt scores.</p>
+<button class="bg-white text-on-primary-container px-6 py-2 rounded-full text-sm font-bold active:scale-95 transition-transform">
+                        Upgrade Now
+                    </button>
+</div>
+</div>
+</section>
+<!-- Logout Action -->
+<button class="w-full py-6 text-error text-sm font-bold flex items-center justify-center gap-2 opacity-60 hover:opacity-100 transition-opacity mt-8">
+<span class="material-symbols-outlined">logout</span>
+            SIGN OUT FROM DEVICE
+        </button>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4">
+<div class="bg-[#1a1f2e]/80 backdrop-blur-[30px] border border-white/10 shadow-[0_0_24px_rgba(189,157,255,0.15)] rounded-full w-full max-w-md flex justify-around items-center px-6 py-3">
+<button class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">add_circle</span>
+</button>
+<button class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">analytics</span>
+</button>
+<button class="flex flex-col items-center justify-center text-white/40 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">track_changes</span>
+</button>
+<!-- Active Tab: Profile -->
+<button class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-[#bd9dff] after:rounded-full text-[#bd9dff]">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+</div>
+</nav>
+</body></html>

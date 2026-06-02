@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register - PaisaTrack</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#00452d",
+                        "surface-dim": "#080e1d",
+                        "inverse-surface": "#faf8ff",
+                        "outline": "#6f7588",
+                        "surface-variant": "#1d253b",
+                        "inverse-on-surface": "#4f5566",
+                        "outline-variant": "#424859",
+                        "on-tertiary": "#490005",
+                        "tertiary-fixed-dim": "#ff7b74",
+                        "on-tertiary-fixed": "#3a0003",
+                        "on-background": "#e0e5fb",
+                        "on-surface-variant": "#a5aabf",
+                        "on-tertiary-fixed-variant": "#79000e",
+                        "surface": "#080e1d",
+                        "surface-container": "#12192b",
+                        "on-primary-fixed": "#000000",
+                        "error-dim": "#d73357",
+                        "on-secondary-fixed-variant": "#006544",
+                        "secondary": "#69f6b8",
+                        "tertiary-fixed": "#ff928b",
+                        "secondary-fixed": "#69f6b8",
+                        "on-error-container": "#ffb2b9",
+                        "surface-container-lowest": "#000000",
+                        "on-secondary-container": "#e1ffec",
+                        "secondary-fixed-dim": "#58e7ab",
+                        "surface-container-highest": "#1d253b",
+                        "surface-bright": "#222c43",
+                        "on-tertiary-container": "#1f0001",
+                        "tertiary": "#ff716a",
+                        "primary-dim": "#8a4cfc",
+                        "primary": "#bd9dff",
+                        "surface-container-low": "#0c1324",
+                        "surface-container-high": "#171f33",
+                        "on-secondary": "#005a3c",
+                        "tertiary-container": "#fd4e4d",
+                        "error-container": "#a70138",
+                        "background": "#080e1d",
+                        "on-primary-container": "#2e006c",
+                        "error": "#ff6e84",
+                        "inverse-primary": "#742fe5",
+                        "on-primary-fixed-variant": "#390083",
+                        "secondary-dim": "#58e7ab",
+                        "primary-fixed": "#b28cff",
+                        "surface-tint": "#bd9dff",
+                        "tertiary-dim": "#ff716a",
+                        "on-primary": "#3c0089",
+                        "primary-fixed-dim": "#a67aff",
+                        "primary-container": "#b28cff",
+                        "on-surface": "#e0e5fb",
+                        "secondary-container": "#006c49",
+                        "on-error": "#490013"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080e1d;
+        }
+        .glass-card {
+            background: rgba(29, 37, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 0.5px solid rgba(111, 117, 136, 0.2);
+        }
+        .inner-glow {
+            box-shadow: inset 1px 1px 0px 0px rgba(255, 255, 255, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface selection:bg-primary selection:text-on-primary-container">
+<!-- Top Navigation Anchor (Suppressed for focused Transactional state per rules, but showing TopAppBar branding only) -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/20 backdrop-blur-xl h-16 flex items-center justify-center px-6 max-w-md mx-auto left-1/2 -translate-x-1/2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-violet-300" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<h1 class="text-xl font-black tracking-tighter text-violet-400 drop-shadow-[0_0_8px_rgba(189,157,255,0.4)]">PaisaTrack</h1>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="min-h-screen flex flex-col justify-center px-6 pt-20 pb-12 max-w-md mx-auto">
+<!-- Welcome Section -->
+<section class="mb-10 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-highest text-primary-dim text-xs font-bold tracking-widest uppercase mb-4">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>The Intelligent Glow</span>
+</div>
+<h2 class="text-4xl font-black tracking-tight mb-2 text-on-surface">Create Account</h2>
+<p class="text-on-surface-variant leading-relaxed">Start your premium financial journey 💸</p>
+</section>
+<!-- Registration Form -->
+<div class="glass-card inner-glow rounded-lg p-8 shadow-2xl space-y-6">
+<!-- Form Group: Full Name -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">person</span>
+<input class="w-full bg-surface-container-low border-none rounded-md py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-primary/50 transition-all outline-none" placeholder="Arjun Sharma" type="text"/>
+</div>
+</div>
+<!-- Form Group: Email -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">College Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">alternate_email</span>
+<input class="w-full bg-surface-container-low border-none rounded-md py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-primary/50 transition-all outline-none" placeholder="arjun@iit.edu" type="email"/>
+</div>
+</div>
+<!-- Form Group: College Name -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">College Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">school</span>
+<input class="w-full bg-surface-container-low border-none rounded-md py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-primary/50 transition-all outline-none" placeholder="IIT Bombay" type="text"/>
+</div>
+</div>
+<!-- Form Group: Password -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant ml-1">Secure Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">lock</span>
+<input class="w-full bg-surface-container-low border-none rounded-md py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/30 focus:ring-2 focus:ring-primary/50 transition-all outline-none" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl cursor-pointer hover:text-primary transition-colors">visibility</span>
+</div>
+</div>
+<!-- Sign Up Button -->
+<button class="w-full py-4 rounded-full bg-gradient-to-br from-primary-dim to-primary text-on-primary-container font-extrabold text-sm uppercase tracking-widest shadow-[0_8px_24px_rgba(189,157,255,0.25)] hover:shadow-[0_12px_32px_rgba(189,157,255,0.4)] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
+<span>Sign Up</span>
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+<!-- Secondary Actions -->
+<div class="mt-8 text-center space-y-4">
+<p class="text-on-surface-variant text-sm">
+                Already have an account? 
+                <a class="text-primary font-bold hover:underline underline-offset-4 decoration-primary-dim transition-all" href="#">Login</a>
+</p>
+<div class="pt-8 flex flex-col items-center gap-4">
+<span class="h-[1px] w-12 bg-outline-variant/30"></span>
+<div class="flex gap-6">
+<div class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-surface-container-highest cursor-pointer transition-colors border border-outline-variant/10">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYxGo6WTUsn-RtZ9ApQJ6n1-_rVwA90RMsCbLkSRyWtN4l1RcID8KYrhqEmV4ypks9Y2QHpItBXJo6B6mLoKMdHZ7SilmvWR_ZEFwghC1p4Yz2hB5Wib79kyuf2JhR3eMJAdgK7TfAsukHrZRPzvsO_bK1OAj3wz6m4zxYiqp1618P23oV2_emYC5uSOEWny6V7SGm3X6039i76ONr2xNJvUBk7WGxomTbClYMvqpNbjm11TkOI-T1BRZWBjlA--WXbAV6erU8_e8"/>
+</div>
+<div class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-surface-container-highest cursor-pointer transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined text-on-surface">ios</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Visual Accents (Ethereal Glows) -->
+<div class="fixed top-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-primary/10 blur-[100px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none -z-10"></div>
+<!-- Decorative Image (Bento style hint) -->
+<div class="hidden lg:block fixed right-12 top-1/2 -translate-y-1/2 w-80 h-[500px] glass-card rounded-xl overflow-hidden shadow-2xl border border-outline-variant/20 p-2">
+<div class="w-full h-full rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover grayscale-[0.2] opacity-60" data-alt="abstract flowing 3D liquid metal shapes in deep purple and emerald green with soft studio lighting and high contrast" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7azBc9mZEj2oypEdQmiBRq7iMVtmtK6mx5iVY53UuisQzxO1cv76BZgP7iVsfBLeRXmuEO5dkAv3NfupnlKxt84jAr3LRK4QPtrEumHSIhJBICnwhUSwGxYpCOlzFhIdalamzPX2izaA2R8-oi3zbb1Qdq2UaPlgS7Iz_6C8d0b_xgfidQJbQkxxkgnMJi58pwxzYv9lVs4oZlZZWZBByZTziaV7WjKMgxdkixaRUJP9EGePjMw_JkxnmCd3OpevaPQU8v6xo2nw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8">
+<div class="text-primary font-black text-2xl tracking-tighter mb-2 italic">Track Smarter.</div>
+<p class="text-xs text-on-surface-variant font-medium leading-relaxed">Join 50k+ students managing their finances with editorial precision and zero stress.</p>
+</div>
+</div>
+</div>
+</body></html>
