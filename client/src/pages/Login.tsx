@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, AlertCircle, Eye, EyeOff, ShieldCheck, TrendingUp, Phone, UserCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
 import { auth, googleProvider } from '../lib/firebase';
-import { signInWithEmailAndPassword, signInWithPopup, signInAnonymously, signInWithPhoneNumber, RecaptchaVerifier, ConfirmationResult } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, signInAnonymously, signInWithPhoneNumber, RecaptchaVerifier, ConfirmationResult, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 
 const Login: React.FC = () => {
   const [authMode, setAuthMode] = useState<'email' | 'phone'>('email');
@@ -44,6 +44,21 @@ const Login: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result && result.user) {
+          setLoading(true);
+          await handleSuccessfulLogin(result.user);
+        }
+      })
+      .catch((error) => {
+        console.error("Redirect login error:", error);
+        setLoading(false);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,19 +114,30 @@ const Login: React.FC = () => {
 
   // 🔥 ZERO DELAY POPUP: Direct fire, no wrappers, no async/await block
   const handleGoogleLogin = () => {
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        setLoading(true);
-        handleSuccessfulLogin(result.user);
-      })
-      .catch((error: any) => {
-        console.error("Google Auth Error:", error);
-        if (error.code === 'auth/popup-blocked') {
-          toast.error("Popup blocked! Try using regular Chrome without Ad-Blockers.", { duration: 5000 });
-        } else if (error.code !== 'auth/popup-closed-by-user') {
-          toast.error(`Login failed: ${error.message}`);
-        }
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    if (isLocalhost) {
+      signInWithPopup(auth, googleProvider)
+        .then((result) => {
+          setLoading(true);
+          handleSuccessfulLogin(result.user);
+        })
+        .catch((error: any) => {
+          console.error("Google Auth Error:", error);
+          if (error.code === 'auth/popup-blocked') {
+            toast.error("Popup blocked! Try using regular Chrome without Ad-Blockers.", { duration: 5000 });
+          } else if (error.code !== 'auth/popup-closed-by-user') {
+            toast.error(`Login failed: ${error.message}`);
+          }
+          setLoading(false);
+        });
+    } else {
+      signInWithRedirect(auth, googleProvider).catch((error: any) => {
+        console.error("Google Auth Redirect Error:", error);
+        toast.error(`Login failed: ${error.message}`);
+        setLoading(false);
       });
+    }
   };
 
   const handleAnonymousLogin = async (e: React.MouseEvent) => {

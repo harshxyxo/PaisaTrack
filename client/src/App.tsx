@@ -1,8 +1,9 @@
 // Testing CodeRabbit Automated Review
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import api from './lib/axios';
 
 // Components
 import Layout from './components/Layout';
@@ -64,6 +65,11 @@ const AppContent = () => {
 };
 
 function App() {
+  useEffect(() => {
+    // Silent prefetch ping to wake up the backend on Render's free tier
+    api.get('/').catch(() => {});
+  }, []);
+
   return (
     <Router>
       <AuthProvider>
