@@ -118,9 +118,13 @@ const Login: React.FC = () => {
 
     if (isLocalhost) {
       signInWithPopup(auth, googleProvider)
-        .then((result) => {
+        .then(async (result) => {
           setLoading(true);
-          handleSuccessfulLogin(result.user);
+          try {
+            await handleSuccessfulLogin(result.user);
+          } catch (err) {
+            setLoading(false);
+          }
         })
         .catch((error: any) => {
           console.error("Google Auth Error:", error);
