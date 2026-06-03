@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       localStorage.setItem('user', JSON.stringify(data.user));
       window.dispatchEvent(new Event('auth-sync'));
       toast.success("Welcome back! 🚀");
-      window.location.href = '/dashboard';
+      navigate('/dashboard');
     } catch (backendError: any) {
       try {
         const { data } = await api.post('/auth/register', { name: fallbackName, email: fallbackEmail, password: user.uid });
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
         window.dispatchEvent(new Event('auth-sync'));
         toast.success("Welcome to PaisaTrack! 🎉");
-        window.location.href = '/onboarding';
+        navigate('/onboarding');
       } catch (regError) {
         toast.error("Server connection failed. Please check backend.");
         setLoading(false);
