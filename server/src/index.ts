@@ -19,6 +19,10 @@ import { authenticateToken } from './middleware/auth';
 import transactionRoutes from './routes/transactionRoutes';
 
 const app = express();
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
 const PORT = process.env.PORT || 3001;
 
 // Middleware

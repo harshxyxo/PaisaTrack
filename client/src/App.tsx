@@ -67,7 +67,7 @@ const AppContent = () => {
 function App() {
   useEffect(() => {
     // Silent prefetch ping to wake up the backend on Render's free tier
-    api.get('/').catch(() => {});
+    api.get('/health').catch(() => {});
   }, []);
 
   return (
